@@ -1,41 +1,40 @@
 require('dotenv').config();
 const express = require('express')
-const morgan = require('morgan')
 const cors = require('cors')
-const bodyParser = require('body-parser')
-
-
-
-//*path router
-const mainRouter = require('./routers/calendarRouter');
-const connextDB = require('./config/connextDB');
-
-//*env
-const port = process.env.PORT || 9000
-
-
-//*database
-connextDB();
-
+const morgan = require('morgan')
+const bodyParser =require('body-parser')
+const mongoose = require('mongoose');
+const mainRouter = require("./routers/userRoute");
 const app = express();
 
-//*router
-app.use('/api', mainRouter)
+const port = process.env.PORT || 3001
+const mongoAtlas = process.env.DATABASE
 
 
-//*middleware
+
+
+mongoose.connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: false
+}).then(() =>console.log('เชื่อมต่อฐานข้อมูลเรียบร้อย'))
+.catch((err) => console.log('เกิดข้อผิดพลาด'+err))
+
+
+
+
+//app.use(bodyParser.json({limit: "20mb"}))
+app.use(express.json());
 app.use(morgan('dev'));
-app.use(bodyParser.json({'limit': '20mb'}))
+app.use(bodyParser.json({ limit: "20mb" }));
 app.use(cors());
 
 
 
-app.listen(port , () => console.log(`Server is running is... port ${port}`))
+
+app.use("/api", mainRouter);
 
 
-
-
-
+app.listen(port , ()=> console.log(`Server is running MY port ${port}`));
 
 
 
