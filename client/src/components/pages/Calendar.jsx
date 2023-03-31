@@ -8,7 +8,7 @@ import { Typography, Row, Col, Button, Modal, Card, Input } from "antd";
 import SideMenu from "../layouts/SideMenu";
 import { useState, useEffect } from "react";
 
-import { createEvent } from "../../api/CalendarAPI";
+import { createEvent, listEvent } from "../../api/CalendarAPI";
 
 const CalendarComponent = () => {
   // State ของ modal
@@ -20,6 +20,25 @@ const CalendarComponent = () => {
     start: "",
     end: "",
   });
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+const [events , setEvent] = useState([]) //เก็บค่าที่ได้จากการ API จากหลังบ้าน
+
+  const loadData = () => {
+    listEvent()
+      .then((res) => {
+        // console.log( res.data);
+        setEvent(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
 
   const onChangeValue = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -34,11 +53,17 @@ const CalendarComponent = () => {
     console.log(values);
 
     createEvent(values)
-      .then((res) => console.log(res))
+      .then((res) => {
+        loadData();
+        setValues('')
+        //หรือ
+        // setValues({ ...values, title: "" });
+      })
       .catch((err) => console.log(err));
     setIsModalOpen(false);
   };
   const handleCancel = () => {
+      setValues("");
     setIsModalOpen(false);
   };
 
@@ -67,6 +92,7 @@ const CalendarComponent = () => {
             }}
             selectable={true} // เพื่อทำให้สามารถคลิกที่แผ่นที่ได้
             select={handleSelect} //function หากมีการคลิก
+            events={events}
           />
           <Modal
             title="Basic Modal"
@@ -74,12 +100,7 @@ const CalendarComponent = () => {
             onOk={handleOk}
             onCancel={handleCancel}
           >
-            <Input
-              showCount
-              maxLength={200}
-              name="title"
-              onChange={onChangeValue}
-            />
+            <Input name="title" onChange={onChangeValue}  showCount max={200} value={values.title}/>
 
             <p>Some contents...</p>
           </Modal>
