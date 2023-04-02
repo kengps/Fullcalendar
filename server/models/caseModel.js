@@ -12,10 +12,13 @@ const schemaCase = mongoose.Schema(
     end: {
       type: Date,
     },
-    allDay:{
+    color: {
+      type: String,
+    },
+    allDay: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   { timestamps: true }
 ); //ทำการจัดเก็บข้อมูลช่วงเวลาในการสร้างหรือแก้ไข

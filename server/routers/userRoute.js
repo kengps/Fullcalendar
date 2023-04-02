@@ -1,9 +1,34 @@
 const express = require('express');
-const { requestUser , allCase ,updateCase ,removeCase ,listEvent ,createEvent} = require('../controllers/calendarController');
+const multer = require("multer");
+const {
+  currentDate,
+  currentMonth,
+  listEvent,
+  createEvent,
+  updateImage,
+} = require("../controllers/calendarController");
 const router = express.Router();
 
 // //สร้าง case 
 // router.post('/createcase', requestUser)
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      "file-" +
+        Date.now() +
+        "." +
+        file.originalname.split(".")[file.originalname.split(".").length - 1]
+    );
+  },
+});
+
+const upload = multer({ storage: storage }).single("fileupload");
+
 
 
 router.post('/event', createEvent)
@@ -12,18 +37,13 @@ router.post('/event', createEvent)
 router.get("/list-event", listEvent);
 
 
-// //เรียกดูเคสทั้งหมด
-// router.get('/listcase', allCase)
-
-// // เรียกดูเคส 1 เคส
-// router.get('/findcase/:id', findCase)
+router.post("/current-month", currentMonth);
 
 
-// // update case
-// router.put('/update/:id', updateCase)
+//router.post("/update-image ", updateImage);
 
-// // delete case
-// router.delete('/delete/:id', removeCase)
+
+// router.get("/current-date", currentDate);
 
 
 
