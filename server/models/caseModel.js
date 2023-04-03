@@ -6,6 +6,9 @@ const schemaCase = mongoose.Schema(
       type: String,
       required: true,
     },
+    filename: {
+      type: String,
+    },
     start: {
       type: Date,
     },

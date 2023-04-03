@@ -1,7 +1,7 @@
 const Event = require("../models/caseModel");
-const { notifyEvent } = require("../notify/lineNotify");
-const moment = require('moment')
-const cron = require('node-cron')
+const { notifyEvent, notifyEvenings } = require("../notify/lineNotify");
+const moment = require("moment");
+const cron = require("node-cron");
 
 exports.createEvent = async (req, res) => {
   const { title, start, end, color } = req.body;
@@ -54,11 +54,10 @@ exports.currentMonth = async (req, res) => {
   }
 };
 
-
 const currentDate = async () => {
   try {
     const day = new Date();
-    const currentD = await Event.find().sort({ start: 1});
+    const currentD = await Event.find().sort({ start: 1 });
 
     const currents = currentD.filter((item) => {
       return (
@@ -66,11 +65,11 @@ const currentDate = async () => {
         day.toDateString() <= item.end.toDateString()
       );
     });
-   
+
     //loop notify
-    for(t in currents){
+    for (t in currents) {
       const msg = "วันนี้มีกิจกรรม :" + currents[t].title;
-      notifyEvent(msg)
+      notifyEvent(msg);
     }
 
     // console.log(currents);
@@ -79,7 +78,62 @@ const currentDate = async () => {
     console.log(error);
   }
 };
+
+// upload รูปภาพ
+exports.updateImage = async (req, res) => {
+  try {
+    const id = req.body.id;
+    const filename = req.file.filename;
+    const uploadImage = await Event.findOneAndUpdate(
+      { _id: id },
+      { filename: filename }
+    );
+
+    res.json(uploadImage);
+  } catch (error) {
+    res.status(500).send("server is error", error);
+  }
+};
+
+
+// หากไม่มีรูปมันจะ error 
+const notifyEvening = async (req, res) => {
+  try {
+    const day = new Date();
+    const currentD = await Event.find().sort({ start: 1 });
+
+    const currents = currentD.filter((item) => {
+      return (
+        day.toDateString() >= item.start.toDateString() &&
+        day.toDateString() < item.end.toDateString()
+      );
+    });
+
+    //loop notify
+    for (t in currents) {
+      const msg = "วันนี้มีกิจกรรม :" + currents[t].title;
+      const filename =  currents[t].filename;
+ 
+      // console.log('msg:', );
+      // console.log('msg:',  currents.length);
+
+      notifyEvenings(msg, filename);
+    }
+
+    // console.log(currents);
+     res.send(currents);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
-cron.schedule("10 18 * * *", () => {
-    currentDate()
+cron.schedule("05 11 * * *", () => {
+  currentDate();
 });
+//ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
+// cron.schedule("* 11 * * *", () => {
+//   notifyEvening();
+// });
+
+

@@ -16,5 +16,5 @@ export const handleCurrentMonth = async (value) =>
 
 
 export const handleFileUpdateImg = async (value) =>
-  await axios.post(`${import.meta.env.VITE_REACT_APP_API}/update-image`, value);
+  await axios.post(`${import.meta.env.VITE_REACT_APP_API}/upload-image`, value);
 

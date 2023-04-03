@@ -4,14 +4,30 @@ import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction"; // needed for dayClick
 import timeGridPlugin from "@fullcalendar/timegrid";
 
-import { Typography, Row, Col, Button, Modal, Card, Input, Select ,Tag} from "antd";
+import {
+  Typography,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Card,
+  Input,
+  Select,
+  Tag,
+  Image,
+} from "antd";
 import SideMenu from "../layouts/SideMenu";
 import { useState, useEffect } from "react";
-import { BsAirplane, BsAirplaneFill, BsThermometerHigh ,BsQuestion} from "react-icons/bs";
-import { FaMountain, FaBusinessTime ,FaQuestion } from "react-icons/fa";
-
+import {
+  BsAirplane,
+  BsAirplaneFill,
+  BsThermometerHigh,
+  BsQuestion,
+} from "react-icons/bs";
+import { FaMountain, FaBusinessTime, FaQuestion } from "react-icons/fa";
 
 import moment from "moment";
+const { Meta } = Card;
 
 import {
   createEvent,
@@ -20,15 +36,15 @@ import {
   handleFileUpdateImg,
 } from "../../api/CalendarAPI";
 
-
-
-
 const CalendarComponent = () => {
   // State ของ modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [id, setId] = useState("");
   const [files, setFiles] = useState("");
+
+  //state ของการเก็บค่ารูปภาพ
+  const [image, setImage] = useState("");
 
   // State ของ การดึงเดือนมา handleCurrentMonth
   const [currentEvent, setCurrentEvent] = useState([]);
@@ -193,12 +209,14 @@ const CalendarComponent = () => {
   //หากมีการกดที่กิจกรรมของวันนั้นๆ จะให้เลือกรูปภาพมาใส่
   const handleClick = (eventInfo) => {
     const id = eventInfo.event._def.extendedProps._id;
+    setImage(eventInfo.event._def.extendedProps.filename);
     setId(id);
     showModal2();
   };
 
   const handleFile = (event) => {
     const input = event.target.files[0];
+    
     setFiles(input);
   };
 
@@ -213,16 +231,22 @@ const CalendarComponent = () => {
     formData.append("files", files);
     handleFileUpdateImg(formData)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("เกิดอะไรขึ้น", err);
       });
     setIsModalOpen2(false);
   };
   const handleCancel2 = () => {
     setIsModalOpen2(false);
+    setImage('');
   };
+
+  const handleChanges = () => {
+    
+  }
+
 
   return (
     <div>
@@ -329,6 +353,8 @@ const CalendarComponent = () => {
             drop={handleDrop} // function หากมีการวางข้อมูลลงไปที่วันที่
             datesSet={currentMonth} // function หากมีการเปลี่ยนเดือน
             eventClick={handleClick} //หากกดที่ Event นั้นๆ
+            editable={true} //สำหรับการลากเพิ่มวัน
+            eventChange={handleChanges}
           />
           <Modal
             title="Basic Modal"
@@ -360,13 +386,19 @@ const CalendarComponent = () => {
           </Modal>
           //modal สำหรับ EventClick
           <Modal
-            title="Basic Modal"
+            title="image"
             open={isModalOpen2}
             onOk={handleOk2}
             onCancel={handleCancel2}
           >
-            <Typography.Title>Hello</Typography.Title>
-            <Input name="file" onChange={handleFile} type="file" />
+            <Typography.Title level={2}>รายละเอียด</Typography.Title>
+            <Card style={{ width: 360 }} className="ms-5">
+              <Image
+                alt=""
+                src={`${import.meta.env.VITE_REACT_APP_IMAGE}/${image}`}
+              />{" "}
+            </Card>
+            <Input type="file"  name="file" onChange={handleFile} />
           </Modal>
         </Col>
       </Row>
@@ -376,16 +408,3 @@ const CalendarComponent = () => {
 
 export default CalendarComponent;
 
-
-  
-//   if(d == moment(item.start).format("DD/MM/YYYY")) {
-//      {moment(item.start).format("DD/MM/YYYY") + "-" + item.title}
-//         <Tag color="green">วันนี้</Tag>
-//   }
-//   else if( r >= moment(item.start) && r < moment(item.end)) {
-// {moment(item.start).format("DD/MM/YYYY") + "-" + item.title}
-//         <Tag color="yellow">อยู่ระหว่างดำเนินการ</Tag>
-//   }
-//   else {
-// <>{moment(item.start).format("DD/MM/YYYY") + "-" + item.title}</>
-//   }

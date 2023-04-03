@@ -6,6 +6,8 @@ const {
   listEvent,
   createEvent,
   updateImage,
+
+  notifyEvening,
 } = require("../controllers/calendarController");
 const router = express.Router();
 
@@ -27,7 +29,8 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage }).single("fileupload");
+// single("files"); ชื่อ files ต้องตรงกับกับส่วนของ client ที่มีการ   formData.append("files", files);
+const upload = multer({ storage: storage }).single("files");
 
 
 
@@ -40,10 +43,16 @@ router.get("/list-event", listEvent);
 router.post("/current-month", currentMonth);
 
 
-//router.post("/update-image ", updateImage);
+router.post("/upload-image", upload, updateImage);
 
 
+
+//ลบออกเพราะไม่ได้มีการใช้
 // router.get("/current-date", currentDate);
+
+
+// //ลบออกเพราะไม่ได้มีการใช้
+//  router.get("/current-date", notifyEvening);
 
 
 
