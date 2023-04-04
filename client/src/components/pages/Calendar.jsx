@@ -407,25 +407,14 @@ const CalendarComponent = () => {
                     </>
                   )}
                 </li>
-                // <li key={index}>
-                //   {d === moment(item.start).format("DD/MM/YYYY") ? (
-                //     <>
-                //       {moment(item.start).format("DD/MM/YYYY") +
-                //         "-" +
-                //         item.title}
-                //       <Tag color="green">วันนี้</Tag>
-                //     </>
-                //   ) : r >= moment(item.start) && r < moment(item.end) ? (
-                //     <>
-                //       {moment(item.start).format("DD/MM/YYYY") +
-                //         "-" +
-                //         item.title}
-                //       <Tag color="yellow">อยู่ระหว่างดำเนินการ</Tag>
-                //     </>
-                //   ) : (
 
-                //   )}
-                // </li>
+                //                ถ้าวันที่ปัจจุบัน (d) เท่ากับวันที่เริ่มต้นของกิจกรรม (item.start) ให้แสดงข้อความว่า "วันนี้" (Tag สีเขียว) พร้อมกับแสดงรายละเอียดของกิจกรรม (item.title) และวันที่เริ่มต้น (moment(item.start).format("DD/MM/YYYY"))
+
+                // ถ้าวันที่ปัจจุบัน (d) อยู่ระหว่างวันที่เริ่มต้น (item.start) และวันที่สิ้นสุด (item.end) ของกิจกรรม ให้แสดงข้อความว่า "อยู่ระหว่างดำเนินการ" (Tag สีเหลือง) พร้อมกับแสดงรายละเอียดของกิจกรรม (item.title) และวันที่เริ่มต้น (moment(item.start).format("DD/MM/YYYY"))
+
+                // ถ้าวันที่ปัจจุบัน (d) น้อยกว่าวันที่เริ่มต้น (item.start) ให้แสดงข้อความว่า "กำลังมาถึง" (Tag สีแดง) พร้อมกับแสดงรายละเอียดของกิจกรรม (item.title) และวันที่เริ่มต้น (moment(item.start).format("DD/MM/YYYY"))
+
+                // ถ้าไม่เข้าเงื่อนไขที่กล่าวมาข้างต้นเลย ให้แสดงรายละเอียดของกิจกรรม (item.title) พร้อมกับวันที่เริ่มต้น (moment(item.start).format("DD/MM/YYYY")) โดยไม่มี Tag สีเฉพาะอื่น ๆ ปรากฏอยู่
               ))}
             </ol>
           </Card>
@@ -435,7 +424,7 @@ const CalendarComponent = () => {
               {" "}
               รายงานสรุป
             </Typography.Title>
-            <Button onClick={viewInfoEvent} type="link"  className="ms-5">
+            <Button onClick={viewInfoEvent} type="link" className="ms-5">
               คลิกดูข้อมูล
             </Button>
           </Card>
@@ -572,7 +561,6 @@ export default CalendarComponent;
 //     { id: "4", name: "เที่ยวพักผ่อน", color: "#F9E79F" },
 //     { id: "5", name: "ออกงานนอกสถานที่", color: "#D2B4DE" },
 //     { id: "6", name: "อื่นๆ", color: "#D5D8DC" },
-
 
 // {currentEvent.map((item, index) => (
 //   <li key={index}>
