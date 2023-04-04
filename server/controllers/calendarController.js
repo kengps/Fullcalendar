@@ -2,6 +2,7 @@ const Event = require("../models/caseModel");
 const { notifyEvent, notifyEvenings } = require("../notify/lineNotify");
 const moment = require("moment");
 const cron = require("node-cron");
+const fs = require('fs');
 
 exports.createEvent = async (req, res) => {
   const { title, start, end, color } = req.body;
@@ -126,6 +127,54 @@ const notifyEvening = async (req, res) => {
     console.log(error);
   }
 };
+//update หากมีการเปลี่ยนแปลง Event
+exports.updateEvent = async(req , res)=> {
+    const { id, start, end } = req.body;
+  try {
+       const update = await Event.findOneAndUpdate({_id:id}, {start: start , end:end})
+       res.send(update)
+  } catch (error) {
+     console.log(error);
+  }
+}
+
+
+
+
+
+
+//update หากมีการเปลี่ยนแปลง Event
+exports.removeEvent = async(req , res)=> {
+  console.log(req.body);
+  console.log(req.params);
+    const { id} = req.params;
+  try {
+       const remove = await Event.findByIdAndDelete({_id:id})
+       console.log(remove);
+       // ลบรูปภาพด้วย 
+       await fs.unlink('./public/uploads/' + remove.filename ,(err) => {
+            if(err) console.log('เกิดอะไร',err);
+          
+          console.log('remove success');
+       })
+       res.send('ทำการลบข้อมูลสำเร็จ');
+  } catch (error) {
+     console.log(error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
 cron.schedule("05 11 * * *", () => {

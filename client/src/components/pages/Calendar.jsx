@@ -4,6 +4,11 @@ import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction"; // needed for dayClick
 import timeGridPlugin from "@fullcalendar/timegrid";
 
+import { toast } from "react-toastify";
+import swal from "sweetalert2";
+
+import { DeleteOutlined, ProfileOutlined } from "@ant-design/icons";
+
 import {
   Typography,
   Row,
@@ -15,6 +20,9 @@ import {
   Select,
   Tag,
   Image,
+  Divider,
+  Space,
+  Table,
 } from "antd";
 import SideMenu from "../layouts/SideMenu";
 import { useState, useEffect } from "react";
@@ -25,6 +33,7 @@ import {
   BsQuestion,
 } from "react-icons/bs";
 import { FaMountain, FaBusinessTime, FaQuestion } from "react-icons/fa";
+import { BiHappyAlt } from "react-icons/bi";
 
 import moment from "moment";
 const { Meta } = Card;
@@ -34,6 +43,8 @@ import {
   listEvent,
   handleCurrentMonth,
   handleFileUpdateImg,
+  UpdateEventChange,
+  removeEvent,
 } from "../../api/CalendarAPI";
 
 const CalendarComponent = () => {
@@ -65,10 +76,25 @@ const CalendarComponent = () => {
 
   const [events, setEvent] = useState([]); //เก็บค่าที่ได้จากการ API จากหลังบ้าน เป็นค่าที่เราบันทึกกิจกรรมต่างๆ
 
+  const leaveSickCount = events.filter(
+    (event) => event.title === "ลาป่วย"
+  ).length;
+  const leavePersonalCount = events.filter(
+    (event) => event.title === "ลากิจ"
+  ).length;
+
+  const travelPersonalCount = events.filter(
+    (event) => event.title === "ลาพักร้อน"
+  ).length;
+
+  const othorlPersonalCount = events.filter(
+    (event) => event.title === "อื่นๆ"
+  ).length;
+
   const loadData = () => {
     listEvent()
       .then((res) => {
-        //  console.log('ได้อะไร', res.data);
+        // console.log('ได้อะไร', res.data);
         setEvent(res.data);
       })
       .catch((err) => {
@@ -149,12 +175,16 @@ const CalendarComponent = () => {
     setIsModalOpen(false);
   };
 
+  //  moment(event.dateStr).add(+1, "days1").format("YYYY-MM-DD"),
   const handleSelect = (event) => {
+    const newEnd = new Date(event.endStr); // สร้างวันที่ใหม่จาก event.endStr
+    newEnd.setDate(newEnd.getDate() - 1); // ลบ 1 วัน
+    const endString = newEnd.toISOString().slice(0, 10); // แปลงเป็น string รูปแบบ 'yyyy-mm-dd'
     //หากกดที่วันที่ จะให้ขึ้น modal เข้ามา
     showModal();
-    console.log(event);
+    console.log("คลิกแล้วได้อะไร", event);
     //ต้องการข้อมูลวันที่ start end เพื่อมา update ข้อมูล
-    setValues({ ...values, start: event.startStr, end: event.endStr });
+    setValues({ ...values, start: event.startStr, end: endString });
   };
   // เป็นการดึงข้อข้อมูลจาก calendar  หากเรามีการเปลี่ยนเดือนถัดไปหรือย้อนกลับ โดยเราจะนำแค่เดือนมาใช้
   const currentMonth = (info) => {
@@ -164,29 +194,12 @@ const CalendarComponent = () => {
     handleCurrentMonth({ mm })
       .then((res) => {
         // console.log(res)
+
         setCurrentEvent(res.data);
       })
 
       .catch((err) => console.log(err));
   };
-
-  // const date = moment(new Date()).format('DD/MM/YYYY')
-  // const r = new Date();
-  // const filterDate = currentEvent.filter((item) => {
-  //       return date == moment(item.start).format("DD/MM/YYYY");
-  // })
-  // console.log("filterDate", filterDate);
-
-  // // // ยังไม่ได้แบบที่ต้องการ
-  // // const betweenDate1 = currentEvent.filter((item) => {
-  // //     return r >= moment(item.start) && r < moment(item.end)
-  // // })
-  // // console.log("between", betweenDate);
-
-  //    const betweenDate = currentEvent.filter((item) => {
-  //      return r >= moment(item.start) && r < moment(item.end);
-  //    });
-  //    console.log("between", betweenDate);
 
   const d = moment().format("DD/MM/YYYY");
   const r = moment(); //เนื้องจากถ้าใช้ new Date()
@@ -197,7 +210,7 @@ const CalendarComponent = () => {
     // console.log("ตรงกันหรือไม่" ,d === moment(item.start).format("DD/MM/YYYY"));
     return d === moment(item.start).format("DD/MM/YYYY");
   });
-  // console.log(filterDate);
+  //console.log('ได้อะไร',filterDate);
 
   const betweenDate = currentEvent.filter((item) => {
     return r >= moment(item.start) && r < moment(item.end);
@@ -214,9 +227,33 @@ const CalendarComponent = () => {
     showModal2();
   };
 
+  const handleRemove = async () => {
+    const result = await swal.fire({
+      title: "คุณต้องการลบกิจกรรมหรือไม่",
+      icon: "warning",
+      showCancelButton: true,
+    });
+    if (result.isConfirmed) {
+      removeEvent(id)
+        .then(
+          (res) => {
+            swal.fire("แจ้งเตือน", res.data, "success");
+            loadData();
+          }
+          // console.log(res)\
+        )
+        .catch((err) => {
+          console.log("รอก่อนสิ", err);
+        });
+      setTimeout(() => {
+        setIsModalOpen2(false);
+      }, 1500);
+    }
+  };
+
   const handleFile = (event) => {
     const input = event.target.files[0];
-    
+
     setFiles(input);
   };
 
@@ -240,13 +277,45 @@ const CalendarComponent = () => {
   };
   const handleCancel2 = () => {
     setIsModalOpen2(false);
-    setImage('');
+    setImage("");
   };
 
-  const handleChanges = () => {
-    
-  }
+  //function สำหรับการลากเลื่อน หรือย้ายตำแหน่งวันที่ จะต้องการค่า 3 ค่า คือ event ปัจจุบันและทำการ  update ข้อมูลใหม่โดยการ Axios UpdateEventChange
+  const handleChanges = (e) => {
+    console.log(e.event.startStr, e.event.endStr);
+    console.log(e.event._def.extendedProps._id);
 
+    const values = {
+      id: e.event._def.extendedProps._id,
+      start: e.event.startStr,
+      end: e.event.endStr,
+    };
+    UpdateEventChange(values)
+      .then((res) => {
+        // toast.success('ทำการอัปเดตสำเร็จ')
+        swal.fire("แจ้งเตือน", "ทำการอัปเดตข้อมูลสำเร็จ", "success");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //Modal สำหรับหน้าสรปรายงาน
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
+  const showModal3 = () => {
+    setIsModalOpen3(true);
+  };
+  const handleOk3 = () => {
+    setIsModalOpen3(false);
+  };
+  const handleCancel3 = () => {
+    setIsModalOpen3(false);
+  };
+
+  const viewInfoEvent = () => {
+    showModal3();
+  };
 
   return (
     <div>
@@ -304,7 +373,6 @@ const CalendarComponent = () => {
           </Card>
           <Card>
             <Typography.Title level={3} className="text-center">
-              {" "}
               กิจกรรมทั้งหมด
             </Typography.Title>
             <ol>
@@ -314,15 +382,22 @@ const CalendarComponent = () => {
                     <>
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
-                        item.title}
-                      <Tag color="green">วันนี้</Tag>
+                        item.title}{" "}
+                      <Tag color="green">วันนี้</Tag>{" "}
                     </>
                   ) : r >= moment(item.start) && r < moment(item.end) ? (
                     <>
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
-                        item.title}
-                      <Tag color="yellow">อยู่ระหว่างดำเนินการ</Tag>
+                        item.title}{" "}
+                      <Tag color="yellow">อยู่ระหว่างดำเนินการ</Tag>{" "}
+                    </>
+                  ) : r < moment(item.start) ? (
+                    <>
+                      {moment(item.start).format("DD/MM/YYYY") +
+                        "-" +
+                        item.title}{" "}
+                      <Tag color="red">กำลังมาถึง</Tag>{" "}
                     </>
                   ) : (
                     <>
@@ -332,8 +407,37 @@ const CalendarComponent = () => {
                     </>
                   )}
                 </li>
+                // <li key={index}>
+                //   {d === moment(item.start).format("DD/MM/YYYY") ? (
+                //     <>
+                //       {moment(item.start).format("DD/MM/YYYY") +
+                //         "-" +
+                //         item.title}
+                //       <Tag color="green">วันนี้</Tag>
+                //     </>
+                //   ) : r >= moment(item.start) && r < moment(item.end) ? (
+                //     <>
+                //       {moment(item.start).format("DD/MM/YYYY") +
+                //         "-" +
+                //         item.title}
+                //       <Tag color="yellow">อยู่ระหว่างดำเนินการ</Tag>
+                //     </>
+                //   ) : (
+
+                //   )}
+                // </li>
               ))}
             </ol>
+          </Card>
+
+          <Card>
+            <Typography.Title level={3} className="text-center">
+              {" "}
+              รายงานสรุป
+            </Typography.Title>
+            <Button onClick={viewInfoEvent} type="link"  className="ms-5">
+              คลิกดูข้อมูล
+            </Button>
           </Card>
         </Col>
         <Col span={18}>
@@ -354,7 +458,7 @@ const CalendarComponent = () => {
             datesSet={currentMonth} // function หากมีการเปลี่ยนเดือน
             eventClick={handleClick} //หากกดที่ Event นั้นๆ
             editable={true} //สำหรับการลากเพิ่มวัน
-            eventChange={handleChanges}
+            eventChange={handleChanges} // หากมีการแก้ไข
           />
           <Modal
             title="Basic Modal"
@@ -384,21 +488,75 @@ const CalendarComponent = () => {
               ))}
             </select>
           </Modal>
-          //modal สำหรับ EventClick
+          {/* //*modal สำหรับ EventClick */}
           <Modal
             title="image"
             open={isModalOpen2}
             onOk={handleOk2}
             onCancel={handleCancel2}
+            footer={[
+              //หากไม่มีการกำหนด key จะเกิด warning
+              <Button
+                key="remove"
+                type="primary"
+                danger
+                ghost
+                onClick={handleRemove}
+              >
+                <DeleteOutlined />
+              </Button>,
+              <Button
+                key="cancel"
+                type="primary"
+                danger
+                onClick={handleCancel2}
+              >
+                ยกเลิก
+              </Button>,
+              <Button key="ok" type="primary" onClick={handleOk2}>
+                ตกลง
+              </Button>,
+            ]}
           >
             <Typography.Title level={2}>รายละเอียด</Typography.Title>
-            <Card style={{ width: 360 }} className="ms-5">
+            <Card style={{ width: 360, objectFit: "contain" }} className="ms-5">
               <Image
                 alt=""
                 src={`${import.meta.env.VITE_REACT_APP_IMAGE}/${image}`}
               />{" "}
             </Card>
-            <Input type="file"  name="file" onChange={handleFile} />
+            <Input type="file" name="file" onChange={handleFile} />
+          </Modal>
+
+          <Modal
+            title="Basic Modal"
+            open={isModalOpen3}
+            onOk={handleOk3}
+            onCancel={handleCancel3}
+          >
+            <Typography.Title level={2}>รายละเอียด</Typography.Title>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="row">ประเภทการหยุด</th>
+                  <th>จำนวน</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">ลาป่วย</th>
+                  <th>{leaveSickCount}</th>
+                </tr>
+                <tr>
+                  <th scope="row">ลากิจ</th>
+                  <th>{leavePersonalCount} </th>
+                </tr>
+                <tr>
+                  <th scope="row">ลาพักร้อน</th>
+                  <th>{travelPersonalCount} </th>
+                </tr>
+              </tbody>
+            </table>
           </Modal>
         </Col>
       </Row>
@@ -408,3 +566,23 @@ const CalendarComponent = () => {
 
 export default CalendarComponent;
 
+// { id: "1", name: "ลาป่วย", color: "#F1948A" },
+//     { id: "2", name: "ลากิจ", color: "#82E0AA" },
+//     { id: "3", name: "ลาพักร้อน", color: "#7FB3D5" },
+//     { id: "4", name: "เที่ยวพักผ่อน", color: "#F9E79F" },
+//     { id: "5", name: "ออกงานนอกสถานที่", color: "#D2B4DE" },
+//     { id: "6", name: "อื่นๆ", color: "#D5D8DC" },
+
+
+// {currentEvent.map((item, index) => (
+//   <li key={index}>
+//   {d === moment(item.start).format("DD/MM/YYYY")
+//     ?  <>{moment(item.start).format("DD/MM/YYYY") + "-" + item.title} <Tag color="green">วันนี้</Tag> </>
+//     : r >= moment(item.start) && r < moment(item.end)
+//     ? <>{moment(item.start).format("DD/MM/YYYY") + "-" +item.title} <Tag color="yellow">อยู่ระหว่างดำเนินการ</Tag> </>
+//     : r < moment(item.start)
+//     ? <>{moment(item.start).format("DD/MM/YYYY") + "-" + item.title} <Tag color="blue">กำลังมาถึง</Tag> </>
+//     : null
+//   }
+// </li>
+// ))}

@@ -8,6 +8,8 @@ const {
   updateImage,
 
   notifyEvening,
+  updateEvent,
+  removeEvent,
 } = require("../controllers/calendarController");
 const router = express.Router();
 
@@ -38,6 +40,10 @@ router.post('/event', createEvent)
 
 
 router.get("/list-event", listEvent);
+
+router.put("/update-event", updateEvent);
+
+router.delete("/delete-event/:id", removeEvent);
 
 
 router.post("/current-month", currentMonth);
