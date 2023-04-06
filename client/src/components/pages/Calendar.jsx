@@ -544,6 +544,14 @@ const CalendarComponent = () => {
                   <th scope="row">ลาพักร้อน</th>
                   <th>{travelPersonalCount} </th>
                 </tr>
+                <tr>
+                  <th scope="row">ลาพักร้อน</th>
+                  <th>{travelPersonalCount} </th>
+                </tr>
+                <tr>
+                  <th scope="row">ลาพักร้อน</th>
+                  <th>{travelPersonalCount} </th>
+                </tr>
               </tbody>
             </table>
           </Modal>
