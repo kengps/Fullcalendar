@@ -26,14 +26,29 @@ import {
 } from "antd";
 import SideMenu from "../layouts/SideMenu";
 import { useState, useEffect } from "react";
+// import {
+//   BsAirplane,
+//   BsAirplaneFill,
+//   BsThermometerHigh,
+//   BsQuestion,
+// } from "react-icons/bs";
+// import { FaMountain, FaBusinessTime, FaQuestion } from "react-icons/fa";
+// import { BiHappyAlt } from "react-icons/bi";
+// import { MdCardTravel } from "react-icons/md";
+// import { AiTwotoneCar } from "react-icons/ai";
 import {
   BsAirplane,
   BsAirplaneFill,
   BsThermometerHigh,
   BsQuestion,
-} from "react-icons/bs";
-import { FaMountain, FaBusinessTime, FaQuestion } from "react-icons/fa";
-import { BiHappyAlt } from "react-icons/bi";
+  FaMountain,
+  FaBusinessTime,
+  FaQuestion,
+  BiHappyAlt,
+  MdCardTravel,
+  AiTwotoneCar,
+  MdReorder,
+} from "react-icons/all";
 
 import moment from "moment";
 const { Meta } = Card;
@@ -76,20 +91,74 @@ const CalendarComponent = () => {
 
   const [events, setEvent] = useState([]); //เก็บค่าที่ได้จากการ API จากหลังบ้าน เป็นค่าที่เราบันทึกกิจกรรมต่างๆ
 
-  const leaveSickCount = events.filter(
+  // const leaveSickCount = events.filter((event) => event.title === "ลาป่วย").length;
+  // const leavePersonalCount = events.filter((event) => event.title === "ลากิจ").length;
+  // const travelPersonalCount = events.filter((event) => event.title === "ลาพักร้อน").length;
+  // const othorlPersonalCount = events.filter((event) => event.title === "อื่นๆ").length;
+
+  const currentYear = new Date().getFullYear();
+  const currentMonths = new Date().getMonth();
+
+  const eventsOfYearMonth = events.filter((item) => {
+    const eventYear = new Date(item.start).getFullYear();
+    const eventMonth = new Date(item.start).getMonth();
+    return eventYear === currentYear && eventMonth === currentMonths;
+  });
+
+  // const eventsOfYear = events.filter((item) => {
+  //   const eventYear = new Date(item.start).getFullYear();
+  //   return eventYear === currentYear;
+  // });
+
+  const leaveSickCount = eventsOfYearMonth.filter(
     (event) => event.title === "ลาป่วย"
   ).length;
-  const leavePersonalCount = events.filter(
+  const leavePersonalCount = eventsOfYearMonth.filter(
     (event) => event.title === "ลากิจ"
   ).length;
-
-  const travelPersonalCount = events.filter(
+  const travelPersonalCount = eventsOfYearMonth.filter(
     (event) => event.title === "ลาพักร้อน"
   ).length;
-
-  const othorlPersonalCount = events.filter(
+  const travelGoPersonalCount = eventsOfYearMonth.filter(
+    (event) => event.title === "ไปเที่ยว"
+  ).length;
+  const seminarPersonalCount = eventsOfYearMonth.filter(
+    (event) => event.title === "สัมมนาต่างจังหวัด"
+  ).length;
+  const otherPersonalCount = eventsOfYearMonth.filter(
     (event) => event.title === "อื่นๆ"
   ).length;
+
+  const summary = [
+    { type: "ลาป่วย", count: leaveSickCount },
+    { type: "ลากิจ", count: leavePersonalCount },
+    { type: "ลาพักร้อน", count: travelPersonalCount },
+    { type: "ไปเที่ยว", count: travelGoPersonalCount },
+    { type: "สัมมนาต่างจังหวัด", count: seminarPersonalCount },
+    { type: "อื่นๆ", count: otherPersonalCount },
+  ];
+
+  // const summaryByYear = {
+  //   [currentYear]: summary,
+  // };
+  const summaryByYearMonth = {
+    [`${currentYear}-${currentMonths}`]: summary,
+  };
+
+  function getLeaveCount(year, leaveType) {
+    const eventsOfYear = events.filter(
+      (item) => new Date(item.start).getFullYear() === year
+    );
+    return eventsOfYear.filter((item) => item.title === leaveType).length;
+  }
+
+  const years = [];
+  for (let i = currentYear - 19; i <= currentYear; i++) {
+    years.push(i);
+  }
+
+  console.log("ได้อะไร", summaryByYearMonth); // แสดงผลลัพธ์ของการสรุปยอดลาปีปัจจุบัน
+  //======================================================================================================================
 
   const loadData = () => {
     listEvent()
@@ -106,15 +175,15 @@ const CalendarComponent = () => {
     { id: "1", name: "ลาป่วย", color: "#F1948A" },
     { id: "2", name: "ลากิจ", color: "#82E0AA" },
     { id: "3", name: "ลาพักร้อน", color: "#7FB3D5" },
-    { id: "4", name: "เที่ยวพักผ่อน", color: "#F9E79F" },
-    { id: "5", name: "ออกงานนอกสถานที่", color: "#D2B4DE" },
+    { id: "4", name: "ไปเที่ยว", color: "#F7DC6F " },
+    { id: "5", name: "สัมมนาต่างจังหวัด", color: "#D2B4DE" },
     { id: "6", name: "อื่นๆ", color: "#D5D8DC" },
   ];
 
   // function DragGable เป็นการดึงค่าจาก id external-event มาทั้งหมด เพื้่อให้สามารถดึงข้อมูลทีละตัวได้ เพราะตอนแรกจะไม่สามารถดึงข้อมูลได้มันจะเป็นการคลุมดำ
   const DragGable = () => {
     let DragGables = document.getElementById("external-event");
-    console.log("DragGables", DragGables);
+    // console.log("DragGables", DragGables);
 
     new Draggable(DragGables, {
       itemSelector: ".fc-event",
@@ -133,7 +202,7 @@ const CalendarComponent = () => {
   };
   // handleDrop หากเราลากข้อมูลจาก li มาวางไว้ที่ปฏิทิน ก็จะได้ข้อมูลส่วนนั้นๆมา และให้ทำการยิง api จาก createEvent เพื่อทำการบันทึกข้อมูล
   const handleDrop = (event) => {
-    console.log("handleDrop", event);
+    // console.log("handleDrop", event);
     let value = {
       id: event.draggedEl.getAttribute("id"),
       title: event.draggedEl.getAttribute("title"),
@@ -148,7 +217,7 @@ const CalendarComponent = () => {
   };
 
   const onChangeValue = (e) => {
-    console.log(e.target.name);
+    // console.log(e.target.name);
     setValues({ ...values, [e.target.name]: e.target.value });
     // console.log( e.target.value);
     // console.log( e.target.name);
@@ -158,7 +227,7 @@ const CalendarComponent = () => {
     setIsModalOpen(true);
   };
   const handleOk = async () => {
-    console.log(values);
+    // console.log(values);
 
     createEvent(values)
       .then((res) => {
@@ -182,7 +251,7 @@ const CalendarComponent = () => {
     const endString = newEnd.toISOString().slice(0, 10); // แปลงเป็น string รูปแบบ 'yyyy-mm-dd'
     //หากกดที่วันที่ จะให้ขึ้น modal เข้ามา
     showModal();
-    console.log("คลิกแล้วได้อะไร", event);
+    // console.log("คลิกแล้วได้อะไร", event);
     //ต้องการข้อมูลวันที่ start end เพื่อมา update ข้อมูล
     setValues({ ...values, start: event.startStr, end: endString });
   };
@@ -215,7 +284,7 @@ const CalendarComponent = () => {
   const betweenDate = currentEvent.filter((item) => {
     return r >= moment(item.start) && r < moment(item.end);
   });
-  console.log("between", betweenDate);
+  // console.log("between", betweenDate);
   // window.location.reload();
 
   //*Modal ตัวที่สอง สำหรับการคลิกที่ Event ของวันนั้นๆ
@@ -262,7 +331,7 @@ const CalendarComponent = () => {
   };
 
   const handleOk2 = async () => {
-    console.log(id, files); //หลังจากกดจะให้ส่งค่า id และ file ไป
+    // console.log(id, files); //หลังจากกดจะให้ส่งค่า id และ file ไป
     const formData = new FormData(); // ทำการสร้างตัวแปรมารับค่า เพื่อจะส่งไป update ที่หลังบ้าน
     formData.append("id", id);
     formData.append("files", files);
@@ -282,8 +351,8 @@ const CalendarComponent = () => {
 
   //function สำหรับการลากเลื่อน หรือย้ายตำแหน่งวันที่ จะต้องการค่า 3 ค่า คือ event ปัจจุบันและทำการ  update ข้อมูลใหม่โดยการ Axios UpdateEventChange
   const handleChanges = (e) => {
-    console.log(e.event.startStr, e.event.endStr);
-    console.log(e.event._def.extendedProps._id);
+    // console.log(e.event.startStr, e.event.endStr);
+    // console.log(e.event._def.extendedProps._id);
 
     const values = {
       id: e.event._def.extendedProps._id,
@@ -346,22 +415,32 @@ const CalendarComponent = () => {
                     {/* {item.name} */}
                     {item.name === "ลาป่วย" ? (
                       <>
+                        {" "}
                         <BsThermometerHigh /> {item.name}
                       </>
                     ) : item.name === "ลากิจ" ? (
                       <>
-                        <FaBusinessTime className="me-1" />
-                        {item.name}
+                        <FaBusinessTime className="me-1" /> {item.name}
                       </>
                     ) : item.name === "ลาพักร้อน" ? (
                       <>
                         <FaMountain className="me-1" />
-                        {item.name}
+                        {item.name}{" "}
+                      </>
+                    ) : item.name === "ไปเที่ยว" ? (
+                      <>
+                        <AiTwotoneCar className="me-1" />
+                        {item.name}{" "}
+                      </>
+                    ) : item.name === "สัมมนาต่างจังหวัด" ? (
+                      <>
+                        <MdCardTravel className="me-1" />
+                        {item.name}{" "}
                       </>
                     ) : item.name === "อื่นๆ" ? (
                       <>
-                        <FaQuestion className="me-1" />
-                        {item.name}
+                        {" "}
+                        <FaQuestion className="me-1" /> {item.name}{" "}
                       </>
                     ) : (
                       <>{item.name}</>
@@ -397,7 +476,7 @@ const CalendarComponent = () => {
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="red">กำลังมาถึง</Tag>{" "}
+                      <Tag color="red">เร็วๆ นี้</Tag>{" "}
                     </>
                   ) : (
                     <>
@@ -424,13 +503,14 @@ const CalendarComponent = () => {
               {" "}
               รายงานสรุป
             </Typography.Title>
-            <Button onClick={viewInfoEvent} type="link" className="ms-5">
+            <Button onClick={viewInfoEvent} type="link" className="ms-2">
+              <MdReorder className="mb-1" />
               คลิกดูข้อมูล
             </Button>
           </Card>
         </Col>
         <Col span={18}>
-          <Typography.Title level={1} className="text-center ">
+          <Typography.Title level={1} className="text-center " style={{fontFamily:'mitr'}}>
             ปฏิทินคนสวย
           </Typography.Title>
           <FullCalendar
@@ -450,7 +530,7 @@ const CalendarComponent = () => {
             eventChange={handleChanges} // หากมีการแก้ไข
           />
           <Modal
-            title="Basic Modal"
+            title="รายละเอียด"
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -518,7 +598,7 @@ const CalendarComponent = () => {
           </Modal>
 
           <Modal
-            title="Basic Modal"
+            title="รายงานสรุป"
             open={isModalOpen3}
             onOk={handleOk3}
             onCancel={handleCancel3}
@@ -527,32 +607,91 @@ const CalendarComponent = () => {
             <table className="table">
               <thead>
                 <tr>
+                  <th scope="col">ปี</th>
+                  <th scope="col">เดือน</th>
+                  <th scope="col">ประเภทการหยุด</th>
+                  <th scope="col">จำนวน</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summaryByYearMonth[`${currentYear}-${currentMonths}`].map(
+                  (item, index) => (
+                    <tr key={index}>
+                      {index === 0 && (
+                        <th
+                          rowSpan={
+                            summaryByYearMonth[
+                              `${currentYear}-${currentMonths}`
+                            ].length
+                          }
+                          scope="row"
+                        >
+                          {currentYear}
+                        </th>
+                      )}
+                      {index === 0 && (
+                        <td
+                          rowSpan={
+                            summaryByYearMonth[
+                              `${currentYear}-${currentMonths}`
+                            ].length
+                          }
+                          scope="row"
+                        >
+                          {currentMonths + 1}
+                        </td>
+                      )}
+                      <td>{item.type}</td>
+                      <td>{item.count}</td>
+                    </tr>
+                  )
+                )}
+                <tr>
+                  <th colSpan="3" scope="row" style={{fontSize: 14}}>
+                    รวม
+                  </th>
+                  <td style={{fontWeight: 'bold' , fontSize: '14px'}}> 
+                    {summaryByYearMonth[
+                      `${currentYear}-${currentMonths}`
+                    ].reduce((acc, cur) => acc + cur.count, 0)} ครั้ง
+                  </td>
+                </tr>
+              </tbody>
+
+              {/* <thead>
+                <tr>
+                  <th scope="row">ปี</th>
                   <th scope="row">ประเภทการหยุด</th>
                   <th>จำนวน</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
+                  <th rowSpan="6">{currentYear}</th>
                   <th scope="row">ลาป่วย</th>
-                  <th>{leaveSickCount}</th>
+                  <th>{getLeaveCount(currentYear, "ลาป่วย")}</th>
                 </tr>
                 <tr>
                   <th scope="row">ลากิจ</th>
-                  <th>{leavePersonalCount} </th>
+                  <th>{getLeaveCount(currentYear, "ลากิจ")}</th>
                 </tr>
                 <tr>
                   <th scope="row">ลาพักร้อน</th>
-                  <th>{travelPersonalCount} </th>
+                  <th>{getLeaveCount(currentYear, "ลาพักร้อน")}</th>
                 </tr>
                 <tr>
-                  <th scope="row">ลาพักร้อน</th>
-                  <th>{travelPersonalCount} </th>
+                  <th scope="row">ไปเที่ยว</th>
+                  <th>{getLeaveCount(currentYear, "ไปเที่ยว")}</th>
                 </tr>
                 <tr>
-                  <th scope="row">ลาพักร้อน</th>
-                  <th>{travelPersonalCount} </th>
+                  <th scope="row">สัมมนาต่างจังหวัด</th>
+                  <th>{getLeaveCount(currentYear, "สัมมนาต่างจังหวัด")}</th>
                 </tr>
-              </tbody>
+                <tr>
+                  <th scope="row">อื่นๆ</th>
+                  <th>{getLeaveCount(currentYear, "อื่นๆ")}</th>
+                </tr>
+              </tbody> */}
             </table>
           </Modal>
         </Col>
