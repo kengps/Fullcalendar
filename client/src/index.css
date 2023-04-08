@@ -27,7 +27,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: rgb(234, 236, 238)
+  background-color: rgb(234, 236, 238);
+  
 }
 h1 {
   font-size: 3.2em;

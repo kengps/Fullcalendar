@@ -54,7 +54,7 @@ router.post("/upload-image", upload, updateImage);
 
 
 //ลบออกเพราะไม่ได้มีการใช้
-// router.get("/current-date", currentDate);
+//  router.get("/current-date", currentDate);
 
 
 // //ลบออกเพราะไม่ได้มีการใช้

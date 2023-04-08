@@ -55,6 +55,25 @@ exports.currentMonth = async (req, res) => {
   }
 };
 
+// exports.currentDate = async (req,res) => {
+//   try {
+//     const day = new Date();
+//     const currentD = await Event.find().sort({ start: 1 });
+
+//       console.log('วันที่',day);
+//     const currents = currentD.filter(item =>{
+//       return day.toDateString() >= item.start.toDateString() &&
+//               day.toDateString() <= item.end.toDateString()
+//     })
+//     console.log(currents);
+//     res.send(currents);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+
+
 const currentDate = async () => {
   try {
     const day = new Date();
@@ -70,9 +89,10 @@ const currentDate = async () => {
     //loop notify
     for (t in currents) {
       const msg = "วันนี้มีกิจกรรม :" + currents[t].title;
-      notifyEvent(msg);
+       notifyEvent(msg);
+      console.log(msg);
     }
-
+      
     // console.log(currents);
     // res.send(currents);
   } catch (error) {
@@ -98,40 +118,42 @@ exports.updateImage = async (req, res) => {
 
 
 // หากไม่มีรูปมันจะ error 
-const notifyEvening = async (req, res) => {
-  try {
-    const day = new Date();
-    const currentD = await Event.find().sort({ start: 1 });
+// const notifyEvening = async (req, res) => {
+//   try {
+//     const day = new Date();
+//     const currentD = await Event.find().sort({ start: 1 });
 
-    const currents = currentD.filter((item) => {
-      return (
-        day.toDateString() >= item.start.toDateString() &&
-        day.toDateString() < item.end.toDateString()
-      );
-    });
+//     const currents = currentD.filter((item) => {
+//       return (
+//         day.toDateString() >= item.start.toDateString() &&
+//         day.toDateString() < item.end.toDateString()
+//       );
+//     });
 
-    //loop notify
-    for (t in currents) {
-      const msg = "วันนี้มีกิจกรรม :" + currents[t].title;
-      const filename =  currents[t].filename;
+//     //loop notify
+//     for (t in currents) {
+//       const msg = "วันนี้มีกิจกรรม :" + currents[t].title;
+//       const filename =  currents[t].filename;
  
-      // console.log('msg:', );
-      // console.log('msg:',  currents.length);
+//       // console.log('msg:', );
+//       // console.log('msg:',  currents.length);
 
-      notifyEvenings(msg, filename);
-    }
+//       notifyEvenings(msg, filename);
+//     }
 
-    // console.log(currents);
-     res.send(currents);
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     // console.log(currents);
+//      res.send(currents);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 //update หากมีการเปลี่ยนแปลง Event
 exports.updateEvent = async(req , res)=> {
     const { id, start, end } = req.body;
+    console.log(req.body);
   try {
        const update = await Event.findOneAndUpdate({_id:id}, {start: start , end:end})
+     
        res.send(update)
   } catch (error) {
      console.log(error);
@@ -165,19 +187,8 @@ exports.removeEvent = async(req , res)=> {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
-cron.schedule("05 11 * * *", () => {
+cron.schedule("* 7 * * *", () => {
   currentDate();
 });
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week

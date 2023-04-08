@@ -9,6 +9,9 @@ import swal from "sweetalert2";
 
 import { DeleteOutlined, ProfileOutlined } from "@ant-design/icons";
 
+
+import thLocale from '@fullcalendar/core/locales/th'
+
 import {
   Typography,
   Row,
@@ -66,6 +69,7 @@ const CalendarComponent = () => {
   // State ของ modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [isModalOpen4, setIsModalOpen4] = useState(false);
   const [id, setId] = useState("");
   const [files, setFiles] = useState("");
 
@@ -111,22 +115,22 @@ const CalendarComponent = () => {
   // });
 
   const leaveSickCount = eventsOfYearMonth.filter(
-    (event) => event.title === "ลาป่วย"
+    (event) => event.color === "#FF3366 "
   ).length;
   const leavePersonalCount = eventsOfYearMonth.filter(
-    (event) => event.title === "ลากิจ"
+    (event) => event.color === "#99CC33"
   ).length;
   const travelPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.title === "ลาพักร้อน"
+    (event) => event.color === "#00BFFF"
   ).length;
   const travelGoPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.title === "ไปเที่ยว"
+    (event) => event.color === "#FF66CC"
   ).length;
   const seminarPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.title === "สัมมนาต่างจังหวัด"
+    (event) => event.color === "#f7d342"
   ).length;
   const otherPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.title === "อื่นๆ"
+    (event) => event.color === "#BDB76B"
   ).length;
 
   const summary = [
@@ -151,9 +155,12 @@ const CalendarComponent = () => {
     );
     return eventsOfYear.filter((item) => item.title === leaveType).length;
   }
+  const year = 2020;
+
+  const leaveCount = getLeaveCount(year);
 
   const years = [];
-  for (let i = currentYear - 19; i <= currentYear; i++) {
+  for (let i = currentYear - 5; i <= currentYear; i++) {
     years.push(i);
   }
 
@@ -172,12 +179,12 @@ const CalendarComponent = () => {
   };
   // เพิ่มประชุม และเปลี่ยนออกงานนอกสถานที่ เป็นสัมนา
   const activity = [
-    { id: "1", name: "ลาป่วย", color: "#F1948A" },
-    { id: "2", name: "ลากิจ", color: "#82E0AA" },
-    { id: "3", name: "ลาพักร้อน", color: "#7FB3D5" },
-    { id: "4", name: "ไปเที่ยว", color: "#F7DC6F " },
-    { id: "5", name: "สัมมนาต่างจังหวัด", color: "#D2B4DE" },
-    { id: "6", name: "อื่นๆ", color: "#D5D8DC" },
+    { id: "1", name: "ลาป่วย", color: "#FF3366"},
+    { id: "2", name: "ลากิจ", color: "#99CC33" },
+    { id: "3", name: "ลาพักร้อน", color: "#00BFFF" },
+    { id: "4", name: "ไปเที่ยว", color: "#FF66CC" },
+    { id: "5", name: "สัมมนาต่างจังหวัด", color: "#f7d342" },
+    { id: "6", name: "อื่นๆ", color: "#BDB76B" },
   ];
 
   // function DragGable เป็นการดึงค่าจาก id external-event มาทั้งหมด เพื้่อให้สามารถดึงข้อมูลทีละตัวได้ เพราะตอนแรกจะไม่สามารถดึงข้อมูลได้มันจะเป็นการคลุมดำ
@@ -208,9 +215,9 @@ const CalendarComponent = () => {
       title: event.draggedEl.getAttribute("title"),
       color: event.draggedEl.getAttribute("color"),
       start: event.dateStr,
-      end: moment(event.dateStr).add(+1, "days1").format("YYYY-MM-DD"),
+      end: moment(event.dateStr).add(1, "days").format("YYYY-MM-DD"),
     };
-
+    console.log('มันเป็นยังไง',value);
     createEvent(value)
       .then((res) => {})
       .catch((err) => console.log(err));
@@ -247,7 +254,7 @@ const CalendarComponent = () => {
   //  moment(event.dateStr).add(+1, "days1").format("YYYY-MM-DD"),
   const handleSelect = (event) => {
     const newEnd = new Date(event.endStr); // สร้างวันที่ใหม่จาก event.endStr
-    newEnd.setDate(newEnd.getDate() - 1); // ลบ 1 วัน
+    newEnd.setDate(newEnd.getDate()); // ลบ 1 วัน
     const endString = newEnd.toISOString().slice(0, 10); // แปลงเป็น string รูปแบบ 'yyyy-mm-dd'
     //หากกดที่วันที่ จะให้ขึ้น modal เข้ามา
     showModal();
@@ -386,17 +393,39 @@ const CalendarComponent = () => {
     showModal3();
   };
 
+  const showModal4 = () => {
+    setIsModalOpen4(true);
+  };
+  const handleOk4 = () => {
+    setIsModalOpen4(false);
+  };
+  const handleCancel4 = () => {
+    setIsModalOpen4(false);
+  };
+
+  const viewInfoEvent2 = () => {
+    showModal4();
+  };
+
+  const onChange = (value, mode) => {
+    console.log(value.format("YYYY-MM-DD"), mode);
+  };
+
   return (
     <div>
       <Row>
         <Col span={5}>
           {/* <SideMenu /> */}
-          <Typography.Title level={3} className="text-center">
+          <Typography.Title
+            level={3}
+            className="text-center"
+            style={{ fontFamily: "mitr" }}
+          >
             ประเภทการหยุด
           </Typography.Title>
           <Card>
             <div id="external-event">
-              <ul>
+              <ul style={{ fontFamily: "mitr" }}>
                 {activity.map((item, index) => (
                   <li
                     className="fc-event mt-1 ps-1 "
@@ -451,10 +480,10 @@ const CalendarComponent = () => {
             </div>
           </Card>
           <Card>
-            <Typography.Title level={3} className="text-center">
+            <Typography.Title level={3} className="text-center fontMitr">
               กิจกรรมทั้งหมด
             </Typography.Title>
-            <ol>
+            <ol style={{ fontFamily: "mitr", fontWeight: "normal" }}>
               {currentEvent.map((item, index) => (
                 <li key={index}>
                   {d === moment(item.start).format("DD/MM/YYYY") ? (
@@ -462,7 +491,7 @@ const CalendarComponent = () => {
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="green">วันนี้</Tag>{" "}
+                      <Tag color="red">วันนี้</Tag>{" "}
                     </>
                   ) : r >= moment(item.start) && r < moment(item.end) ? (
                     <>
@@ -476,7 +505,7 @@ const CalendarComponent = () => {
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="red">เร็วๆ นี้</Tag>{" "}
+                      <Tag color="green">เร็วๆ นี้</Tag>{" "}
                     </>
                   ) : (
                     <>
@@ -499,18 +528,41 @@ const CalendarComponent = () => {
           </Card>
 
           <Card>
-            <Typography.Title level={3} className="text-center">
+            <Typography.Title
+              level={3}
+              className="text-center"
+              style={{ fontFamily: "mitr" }}
+            >
               {" "}
               รายงานสรุป
             </Typography.Title>
-            <Button onClick={viewInfoEvent} type="link" className="ms-2">
+            <Button
+              onClick={viewInfoEvent}
+              type="link"
+              className="ms-2"
+              style={{ fontFamily: "mitr" }}
+            >
               <MdReorder className="mb-1" />
               คลิกดูข้อมูล
+            </Button>
+            <br />
+            <Button
+              onClick={viewInfoEvent2}
+              type="link"
+              className="ms-2"
+              style={{ fontFamily: "mitr" }}
+            >
+              <MdReorder className="mb-1" />
+              คลิกดูข้อมูลทั้งปี
             </Button>
           </Card>
         </Col>
         <Col span={18}>
-          <Typography.Title level={1} className="text-center " style={{fontFamily:'mitr'}}>
+          <Typography.Title
+            level={1}
+            className="text-center "
+            style={{ fontFamily: "mitr" }}
+          >
             ปฏิทินคนสวย
           </Typography.Title>
           <FullCalendar
@@ -528,6 +580,9 @@ const CalendarComponent = () => {
             eventClick={handleClick} //หากกดที่ Event นั้นๆ
             editable={true} //สำหรับการลากเพิ่มวัน
             eventChange={handleChanges} // หากมีการแก้ไข
+            locales={thLocale} //กำหนดให้ FullCalendar ใช้ภาษาไทย
+            locale="th" //กำหนดให้ภาษาไทยเป็นภาษาหลัก
+          
           />
           <Modal
             title="รายละเอียด"
@@ -604,12 +659,12 @@ const CalendarComponent = () => {
             onCancel={handleCancel3}
           >
             <Typography.Title level={2}>รายละเอียด</Typography.Title>
-            <table className="table">
+            <table className="table" style={{ fontFamily: "mitr" }}>
               <thead>
                 <tr>
                   <th scope="col">ปี</th>
                   <th scope="col">เดือน</th>
-                  <th scope="col">ประเภทการหยุด</th>
+                  <th scope="col">ประเภท</th>
                   <th scope="col">จำนวน</th>
                 </tr>
               </thead>
@@ -647,13 +702,14 @@ const CalendarComponent = () => {
                   )
                 )}
                 <tr>
-                  <th colSpan="3" scope="row" style={{fontSize: 14}}>
+                  <th colSpan="3" scope="row" style={{ fontSize: 14 }}>
                     รวม
                   </th>
-                  <td style={{fontWeight: 'bold' , fontSize: '14px'}}> 
+                  <td style={{ fontWeight: "bold", fontSize: "14px" }}>
                     {summaryByYearMonth[
                       `${currentYear}-${currentMonths}`
-                    ].reduce((acc, cur) => acc + cur.count, 0)} ครั้ง
+                    ].reduce((acc, cur) => acc + cur.count, 0)}{" "}
+                    ครั้ง
                   </td>
                 </tr>
               </tbody>
@@ -692,6 +748,55 @@ const CalendarComponent = () => {
                   <th>{getLeaveCount(currentYear, "อื่นๆ")}</th>
                 </tr>
               </tbody> */}
+            </table>
+          </Modal>
+
+          <Modal
+            title="รายงานสรุป"
+            open={isModalOpen4}
+            onOk={handleOk4}
+            onCancel={handleCancel4}
+          >
+            <Typography.Title level={2}>รายละเอียด</Typography.Title>
+            <table className="table" style={{ fontFamily: "mitr" }}>
+              <thead>
+                <tr>
+                  <th scope="row">ปี</th>
+                  <th scope="row">ประเภท</th>
+                  <th>จำนวน</th>
+                </tr>
+              </thead>
+              <tbody>
+                {years.map((year, index) => (
+                  <React.Fragment key={index}>
+                    <tr>
+                      <th rowSpan="6">{year}</th>
+                      <td scope="row">ลาป่วย</td>
+                      <td>{getLeaveCount(year, "ลาป่วย")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">ลากิจ</td>
+                      <td>{getLeaveCount(year, "ลากิจ")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">ลาพักร้อน</td>
+                      <td>{getLeaveCount(year, "ลาพักร้อน")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">ไปเที่ยว</td>
+                      <td>{getLeaveCount(year, "ไปเที่ยว")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">สัมมนาต่างจังหวัด</td>
+                      <td>{getLeaveCount(year, "สัมมนาต่างจังหวัด")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">อื่นๆ</td>
+                      <td>{getLeaveCount(year, "อื่นๆ")}</td>
+                    </tr>
+                  </React.Fragment>
+                ))}
+              </tbody>
             </table>
           </Modal>
         </Col>

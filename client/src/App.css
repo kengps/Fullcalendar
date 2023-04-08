@@ -1,9 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Mitr:wght@200;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Kodchasan:wght@200;300;400;500;600;700&family=Mitr:wght@200;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Kodchasan:wght@200;300;400;500;600;700&family=Mitr:wght@200;400;500&family=Noto+Sans+Thai:wght@100;200;300;400;500&display=swap');
+
+
+:root {
+  --fc-event-text-color: black;
+  --fc-today-bg-color: #EBF5FB 
+}
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+.fc .fc-button-primary{
+  background-color: #85C1E9 ;
+  font-family: 'mitr'
+}
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
+  background-color: #3498DB ;
+  color: white;
+}
+.fc .fc-button-primary:disabled {
+  background-color:#3498DB  ;
+  color: var(--fc-button-text-color);
+}
+.fontMitr {
+  font-family: 'Mitr', sans-serif;
+}
+.my-calendar {
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+}
+
+/* ขนาดตัวอักษร */
+.ant-fullcalendar .ant-fullcalendar-date {
+  font-size: 20px;
+}
+
+/* สีของวันที่เลือก */
+.ant-fullcalendar .ant-fullcalendar-date-select .ant-fullcalendar-value {
+  background-color: red;
+}
+
+/* สีของวันหยุดและวันปัจจุบัน */
+.ant-fullcalendar .ant-fullcalendar-date-today .ant-fullcalendar-value,
+.ant-fullcalendar .ant-fullcalendar-month-panel-selected-cell .ant-fullcalendar-value {
+  background-color: yellow;
+}
+
+.fc-event {
+  background-color: #f39c12;
+  border-color: #e67e22;
+  color: black;
+  font-weight:  normal;
+  font-family: 'mitr'
+}
+
+.fc-day, .fc-day-header {
+  font-size: 14px;
+  color: black;
+  font-weight: bold;
+}
+.fc-today {
+  background-color: yellow;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.75em;
+  font-family: 'Mitr', sans-serif;
+  font-weight: normal
+}
+a {
+  font-family: 'mitr';
+    font-weight: normal;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
