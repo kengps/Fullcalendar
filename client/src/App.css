@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Mitr:wght@200;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Kodchasan:wght@200;300;400;500;600;700&family=Mitr:wght@200;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Kodchasan:wght@200;300;400;500;600;700&family=Mitr:wght@200;400;500&family=Noto+Sans+Thai:wght@100;200;300;400;500&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Mitr:wght@200;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Kodchasan:wght@200;300;400;500;600;700&family=Mitr:wght@200;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Kodchasan:wght@200;300;400;500;600;700&family=Mitr:wght@200;400;500&family=Noto+Sans+Thai:wght@100;200;300;400;500&display=swap");
 
 :root {
   --fc-event-text-color: black;
-  --fc-today-bg-color: #EBF5FB 
+  --fc-today-bg-color: #ebf5fb;
 }
 * {
   margin: 0;
@@ -13,20 +12,21 @@
   box-sizing: border-box;
 }
 
-.fc .fc-button-primary{
-  background-color: #85C1E9 ;
-  font-family: 'mitr'
+.fc .fc-button-primary {
+  background-color: #85c1e9;
+  font-family: "mitr";
 }
-.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
-  background-color: #3498DB ;
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background-color: #3498db;
   color: white;
 }
 .fc .fc-button-primary:disabled {
-  background-color:#3498DB  ;
+  background-color: #3498db;
   color: var(--fc-button-text-color);
 }
 .fontMitr {
-  font-family: 'Mitr', sans-serif;
+  font-family: "Mitr", sans-serif;
 }
 .my-calendar {
   font-size: 16px;
@@ -46,7 +46,9 @@
 
 /* สีของวันหยุดและวันปัจจุบัน */
 .ant-fullcalendar .ant-fullcalendar-date-today .ant-fullcalendar-value,
-.ant-fullcalendar .ant-fullcalendar-month-panel-selected-cell .ant-fullcalendar-value {
+.ant-fullcalendar
+  .ant-fullcalendar-month-panel-selected-cell
+  .ant-fullcalendar-value {
   background-color: yellow;
 }
 
@@ -54,11 +56,12 @@
   background-color: #f39c12;
   border-color: #e67e22;
   color: black;
-  font-weight:  normal;
-  font-family: 'mitr'
+  font-weight: normal;
+  font-family: "mitr";
 }
 
-.fc-day, .fc-day-header {
+.fc-day,
+.fc-day-header {
   font-size: 14px;
   color: black;
   font-weight: bold;
@@ -69,12 +72,12 @@
 
 .fc .fc-toolbar-title {
   font-size: 1.75em;
-  font-family: 'Mitr', sans-serif;
-  font-weight: normal
+  font-family: "Mitr", sans-serif;
+  font-weight: normal;
 }
 a {
-  font-family: 'mitr';
-    font-weight: normal;
+  font-family: "mitr";
+  font-weight: normal;
 }
 .logo {
   height: 6em;
@@ -111,3 +114,94 @@ a {
 .read-the-docs {
   color: #888;
 }
+
+/* Media query for screens with a maximum width of 600px */
+@media (max-width: 600px) {
+  /* Styles for the Card */
+  #external-event ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Media query for screens with a minimum width of 601px and a maximum width of 768px */
+@media (min-width: 601px) and (max-width: 768px) {
+  /* Styles for the Card */
+  #external-event ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding:0;
+  }
+  
+}
+
+/* Media query for screens with a minimum width of 769px and a maximum width of 992px */
+@media (min-width: 769px) and (max-width: 992px) {
+  /* Styles for the Card */
+  #external-event ul {
+    padding:0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Media query for screens with a minimum width of 993px and a maximum width of 1200px */
+@media (min-width: 993px) and (max-width: 1200px) {
+  /* Styles for the Card */
+  #external-event ul {
+    padding:0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+/* Media query for screens with a minimum width of 1201px */
+@media (min-width: 1201px) {
+  /* Styles for the Card */
+  #external-event ul {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+@media only screen and (max-width: 600px) {
+  /* ปรับแต่งลักษณะการแสดงผลเมื่อหน้าจอมีความกว้างไม่เกิน 600px */
+  .card {
+    /* ตัวอย่าง */
+    width: 100%;
+    margin-bottom: 20px;
+    padding:0;
+  }
+}
+/* 
+@media (max-width: 600px) {
+  .ant-card-body {
+    flex-direction: column;
+  }
+} */
+
+@media screen and (max-width: 600px) {
+  .ant-col {
+    order: 1; /* เปลี่ยนการแสดงผลให้เป็นลำดับแรก */
+    width: 100%; /* เปลี่ยนความกว้างให้เท่ากับขนาดหน้าจอ */
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .ms-2 {
+    font-size: 8px;
+    padding:0
+  }
+}
+
+
+@media only screen and (max-width: 768px) {
+  .ms-2 {
+    font-size: 12px;
+    padding:0
+  }
+}
+

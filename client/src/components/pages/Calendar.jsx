@@ -9,8 +9,7 @@ import swal from "sweetalert2";
 
 import { DeleteOutlined, ProfileOutlined } from "@ant-design/icons";
 
-
-import thLocale from '@fullcalendar/core/locales/th'
+import thLocale from "@fullcalendar/core/locales/th";
 
 import {
   Typography,
@@ -179,7 +178,7 @@ const CalendarComponent = () => {
   };
   // เพิ่มประชุม และเปลี่ยนออกงานนอกสถานที่ เป็นสัมนา
   const activity = [
-    { id: "1", name: "ลาป่วย", color: "#FF3366"},
+    { id: "1", name: "ลาป่วย", color: "#FF3366" },
     { id: "2", name: "ลากิจ", color: "#99CC33" },
     { id: "3", name: "ลาพักร้อน", color: "#00BFFF" },
     { id: "4", name: "ไปเที่ยว", color: "#FF66CC" },
@@ -217,7 +216,7 @@ const CalendarComponent = () => {
       start: event.dateStr,
       end: moment(event.dateStr).add(1, "days").format("YYYY-MM-DD"),
     };
-    console.log('มันเป็นยังไง',value);
+    console.log("มันเป็นยังไง", value);
     createEvent(value)
       .then((res) => {})
       .catch((err) => console.log(err));
@@ -417,18 +416,18 @@ const CalendarComponent = () => {
         <Col span={5}>
           {/* <SideMenu /> */}
           <Typography.Title
-            level={3}
-            className="text-center"
-            style={{ fontFamily: "mitr" }}
+            
+            className="text-center fontMitr"
+            style={{ fontFamily: "mitr" ,fontSize: '18px' }}
           >
             ประเภทการหยุด
           </Typography.Title>
-          <Card>
+          <Card style={{ marginTop: "20px" }}>
             <div id="external-event">
               <ul style={{ fontFamily: "mitr" }}>
                 {activity.map((item, index) => (
                   <li
-                    className="fc-event mt-1 ps-1 "
+                    className="fc-event mt-1 ps-1"
                     id={item.id}
                     title={item.name}
                     color={item.color}
@@ -480,10 +479,10 @@ const CalendarComponent = () => {
             </div>
           </Card>
           <Card>
-            <Typography.Title level={3} className="text-center fontMitr">
+            <Typography.Title className="fontMitr text-center" style={{fontSize: '18px'}}>
               กิจกรรมทั้งหมด
             </Typography.Title>
-            <ol style={{ fontFamily: "mitr", fontWeight: "normal" }}>
+            <ol style={{ fontFamily: "mitr", fontWeight: "normal" }} className="ms-2">
               {currentEvent.map((item, index) => (
                 <li key={index}>
                   {d === moment(item.start).format("DD/MM/YYYY") ? (
@@ -491,21 +490,21 @@ const CalendarComponent = () => {
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="red">วันนี้</Tag>{" "}
+                      <Tag color="red" className="ms-2">วันนี้</Tag>{" "}
                     </>
                   ) : r >= moment(item.start) && r < moment(item.end) ? (
                     <>
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="yellow">อยู่ระหว่างดำเนินการ</Tag>{" "}
+                      <Tag color="yellow"  className="ms-2">อยู่ระหว่างดำเนินการ</Tag>{" "}
                     </>
                   ) : r < moment(item.start) ? (
                     <>
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="green">เร็วๆ นี้</Tag>{" "}
+                      <Tag color="green"  className="ms-2">เร็วๆ นี้</Tag>{" "}
                     </>
                   ) : (
                     <>
@@ -529,9 +528,9 @@ const CalendarComponent = () => {
 
           <Card>
             <Typography.Title
-              level={3}
+             
               className="text-center"
-              style={{ fontFamily: "mitr" }}
+              style={{ fontFamily: "mitr",fontSize: '18px' }}
             >
               {" "}
               รายงานสรุป
@@ -582,7 +581,6 @@ const CalendarComponent = () => {
             eventChange={handleChanges} // หากมีการแก้ไข
             locales={thLocale} //กำหนดให้ FullCalendar ใช้ภาษาไทย
             locale="th" //กำหนดให้ภาษาไทยเป็นภาษาหลัก
-          
           />
           <Modal
             title="รายละเอียด"
