@@ -53,6 +53,7 @@ import {
 } from "react-icons/all";
 
 import moment from "moment";
+import momentTimezone from 'moment-timezone'
 const { Meta } = Card;
 
 import {
@@ -214,11 +215,26 @@ const CalendarComponent = () => {
       title: event.draggedEl.getAttribute("title"),
       color: event.draggedEl.getAttribute("color"),
       start: event.dateStr,
-      end: moment(event.dateStr).add(1, "days").format("YYYY-MM-DD"),
+      // start: moment(event.date).startOf('day').add(1, 'second').toISOString(),
+      // //end: moment(event.dateStr).add(1, "days").format("YYYY-MM-DD"),
+       end: moment(event.dateStr).endOf("day").format("YYYY-MM-DD"),
+    //   start: moment(event.dateStr)
+    //   .startOf("day")
+    //   .add(1, "second")
+    //   .tz("Asia/Bangkok")
+    //   .format(),
+    // end: moment(event.dateStr)
+    //   .startOf("day")
+    //   .add(1, "day")
+    //   .subtract(1, "second")
+    //   .tz("Asia/Bangkok")
+    //   .format(),
     };
     console.log("มันเป็นยังไง", value);
     createEvent(value)
-      .then((res) => {})
+      .then((res) => {
+        console.log(res);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -252,15 +268,21 @@ const CalendarComponent = () => {
 
   //  moment(event.dateStr).add(+1, "days1").format("YYYY-MM-DD"),
   const handleSelect = (event) => {
-    const newEnd = new Date(event.endStr); // สร้างวันที่ใหม่จาก event.endStr
-    newEnd.setDate(newEnd.getDate()); // ลบ 1 วัน
-    const endString = newEnd.toISOString().slice(0, 10); // แปลงเป็น string รูปแบบ 'yyyy-mm-dd'
-    //หากกดที่วันที่ จะให้ขึ้น modal เข้ามา
+    // const newEnd = new Date(event.endStr); // สร้างวันที่ใหม่จาก event.endStr
+    // newEnd.setDate(newEnd.getDate()); 
+    // const endString = newEnd.toISOString().slice(0, 10); // แปลงเป็น string รูปแบบ 'yyyy-mm-dd'
+    const newEnd = new Date(event.endStr);
+    newEnd.setDate(newEnd.getDate()); // ลบ 1 วันจาก newEnd
+    const endString = newEnd.toISOString().slice(0, 10);
+  // const startString = moment(event.start).toISOString().slice(0, 10); // แปลงวันที่เริ่มต้นเป็น string
+  //const endString = moment(event.end).toISOString().slice(0, 10); // แปลงวันที่สิ้นสุดเป็น string
+
     showModal();
-    // console.log("คลิกแล้วได้อะไร", event);
-    //ต้องการข้อมูลวันที่ start end เพื่อมา update ข้อมูล
+     console.log("คลิกแล้วได้อะไร", event);
+   
     setValues({ ...values, start: event.startStr, end: endString });
   };
+
   // เป็นการดึงข้อข้อมูลจาก calendar  หากเรามีการเปลี่ยนเดือนถัดไปหรือย้อนกลับ โดยเราจะนำแค่เดือนมาใช้
   const currentMonth = (info) => {
     let m = info.view.calendar.currentDataManager.data.currentDate;
@@ -411,9 +433,9 @@ const CalendarComponent = () => {
   };
 
   return (
-    <div>
-      <Row>
-        <Col span={5}>
+    <div >
+      <Row gutter={[16, 16]}>
+        <Col  span={24} md={{ span: 5 }} >
           {/* <SideMenu /> */}
           <Typography.Title
             
@@ -556,7 +578,7 @@ const CalendarComponent = () => {
             </Button>
           </Card>
         </Col>
-        <Col span={18}>
+        <Col  span={24} md={{ span: 18 }}  order={1}>
           <Typography.Title
             level={1}
             className="text-center "
@@ -581,6 +603,8 @@ const CalendarComponent = () => {
             eventChange={handleChanges} // หากมีการแก้ไข
             locales={thLocale} //กำหนดให้ FullCalendar ใช้ภาษาไทย
             locale="th" //กำหนดให้ภาษาไทยเป็นภาษาหลัก
+            selectLongPressDelay={1}
+            
           />
           <Modal
             title="รายละเอียด"
