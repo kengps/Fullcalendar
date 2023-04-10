@@ -10,6 +10,7 @@ const {
   notifyEvening,
   updateEvent,
   removeEvent,
+  currentNoti
 } = require("../controllers/calendarController");
 const router = express.Router();
 
@@ -54,7 +55,7 @@ router.post("/upload-image", upload, updateImage);
 
 
 //ลบออกเพราะไม่ได้มีการใช้
-//  router.get("/current-date", currentDate);
+  router.get("/current-date", currentNoti);
 
 
 // //ลบออกเพราะไม่ได้มีการใช้

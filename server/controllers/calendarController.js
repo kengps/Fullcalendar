@@ -3,12 +3,11 @@ const { notifyEvent, notifyEvenings } = require("../notify/lineNotify");
 const moment = require("moment");
 const cron = require("node-cron");
 
-const { isSameDay }= require('date-fns')
+const { isSameDay } = require("date-fns");
 
-const fs = require('fs');
+const fs = require("fs");
 
 exports.createEvent = async (req, res) => {
-
   const { title, start, end, color } = req.body;
   try {
     console.log(req.body);
@@ -77,13 +76,17 @@ exports.currentMonth = async (req, res) => {
 //   }
 // }
 
-
-
 const currentDate = async () => {
   try {
     const day = new Date();
-    const currentD = await Event.find().sort({ start: 1 });
 
+    const currentDate = day.toLocaleDateString({
+      weekday: "long",
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const currentD = await Event.find().sort({ start: 1 });
     const currents = currentD.filter((item) => {
       return (
         isSameDay(day, item.start) ||
@@ -93,29 +96,27 @@ const currentDate = async () => {
     });
 
     //loop notify
-    let msg = "วันนี้มีกิจกรรม 📢 : \n";
+    let msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
     for (t in currents) {
       const event = currents[t];
-      
+
       let title = event.title;
       if (isSameDay(day, event.start)) {
-        title += ' (วันนี้🟢)';
+        title += " (วันนี้)";
       }
       if (day >= event.start && day < event.end) {
-        title += ' (อยู่ระหว่างดำเนินการ🔴)';
+        title += " (อยู่ระหว่างดำเนินการ)";
       }
-    
+
       msg += `- ${title} \n`;
     }
-    
+
     notifyEvent(msg);
     console.log(msg);
-      
-
 
 
     // console.log(currents);
-    // res.send(currents);
+    //res.send(currents);
   } catch (error) {
     console.log(error);
   }
@@ -137,8 +138,7 @@ exports.updateImage = async (req, res) => {
   }
 };
 
-
-// หากไม่มีรูปมันจะ error 
+// หากไม่มีรูปมันจะ error
 // const notifyEvening = async (req, res) => {
 //   try {
 //     const day = new Date();
@@ -155,7 +155,7 @@ exports.updateImage = async (req, res) => {
 //     for (t in currents) {
 //       const msg = "วันนี้มีกิจกรรม :" + currents[t].title;
 //       const filename =  currents[t].filename;
- 
+
 //       // console.log('msg:', );
 //       // console.log('msg:',  currents.length);
 
@@ -169,47 +169,43 @@ exports.updateImage = async (req, res) => {
 //   }
 // };
 //update หากมีการเปลี่ยนแปลง Event
-exports.updateEvent = async(req , res)=> {
-    const { id, start, end } = req.body;
-    console.log(req.body);
+exports.updateEvent = async (req, res) => {
+  const { id, start, end } = req.body;
+  console.log(req.body);
   try {
-       const update = await Event.findOneAndUpdate({_id:id}, {start: start , end:end})
-     
-       res.send(update)
+    const update = await Event.findOneAndUpdate(
+      { _id: id },
+      { start: start, end: end }
+    );
+
+    res.send(update);
   } catch (error) {
-     console.log(error);
+    console.log(error);
   }
-}
-
-
-
-
-
+};
 
 //update หากมีการเปลี่ยนแปลง Event
-exports.removeEvent = async(req , res)=> {
+exports.removeEvent = async (req, res) => {
   console.log(req.body);
   console.log(req.params);
-    const { id} = req.params;
+  const { id } = req.params;
   try {
-       const remove = await Event.findByIdAndDelete({_id:id})
-       console.log(remove);
-       // ลบรูปภาพด้วย 
-       await fs.unlink('./public/uploads/' + remove.filename ,(err) => {
-            if(err) console.log('เกิดอะไร',err);
-          
-          console.log('remove success');
-       })
-       res.send('ทำการลบข้อมูลสำเร็จ');
+    const remove = await Event.findByIdAndDelete({ _id: id });
+    console.log(remove);
+    // ลบรูปภาพด้วย
+    await fs.unlink("./public/uploads/" + remove.filename, (err) => {
+      if (err) console.log("เกิดอะไร", err);
+
+      console.log("remove success");
+    });
+    res.send("ทำการลบข้อมูลสำเร็จ");
   } catch (error) {
-     console.log(error);
+    console.log(error);
   }
-}
-
-
+};
 
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
-cron.schedule("30 6 * * *", () => {
+cron.schedule("30 06 * * *", () => {
   currentDate();
 });
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
@@ -217,4 +213,48 @@ cron.schedule("30 6 * * *", () => {
 //   notifyEvening();
 // });
 
+exports.currentNoti = async (req, res) => {
+  try {
+    const day = new Date();
 
+    const currentDate = day.toLocaleDateString({
+      weekday: "long",
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const currentD = await Event.find().sort({ start: 1 });
+    const currents = currentD.filter((item) => {
+      return (
+        isSameDay(day, item.start) ||
+        isSameDay(day, item.end) ||
+        (day >= item.start && day < item.end)
+      );
+    });
+
+    //loop notify
+    let msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
+    for (t in currents) {
+      const event = currents[t];
+
+      let title = event.title;
+      if (isSameDay(day, event.start)) {
+        title += " (วันนี้)";
+      }
+      if (day >= event.start && day < event.end) {
+        title += " (อยู่ระหว่างดำเนินการ)";
+      }
+
+      msg += `- ${title} \n`;
+    }
+
+    //notifyEvent(msg);
+    console.log(msg);
+
+
+    // console.log(currents);
+    res.send(currents);
+  } catch (error) {
+    console.log(error);
+  }
+};

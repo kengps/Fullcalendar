@@ -164,7 +164,7 @@ const CalendarComponent = () => {
     years.push(i);
   }
 
-  console.log("ได้อะไร", summaryByYearMonth); // แสดงผลลัพธ์ของการสรุปยอดลาปีปัจจุบัน
+  // console.log("ได้อะไร", summaryByYearMonth); // แสดงผลลัพธ์ของการสรุปยอดลาปีปัจจุบัน
   //======================================================================================================================
 
   const loadData = () => {
@@ -230,9 +230,10 @@ const CalendarComponent = () => {
     //   .tz("Asia/Bangkok")
     //   .format(),
     };
-    console.log("มันเป็นยังไง", value);
+    // console.log("มันเป็นยังไง", value);
     createEvent(value)
       .then((res) => {
+        swal.fire('แจ้งเตือน' ,'ทำการเพิ่มข้อมูลเรียบร้อยแล้ว','success')
         console.log(res);
       })
       .catch((err) => console.log(err));
@@ -257,6 +258,7 @@ const CalendarComponent = () => {
         setValues("");
         //หรือ
         // setValues({ ...values, title: "" });
+        swal.fire('แจ้งเตือน' ,'ทำการเพิ่มข้อมูลเรียบร้อยแล้ว','success')
       })
       .catch((err) => console.log(err));
     setIsModalOpen(false);
@@ -278,9 +280,11 @@ const CalendarComponent = () => {
   //const endString = moment(event.end).toISOString().slice(0, 10); // แปลงวันที่สิ้นสุดเป็น string
 
     showModal();
-     console.log("คลิกแล้วได้อะไร", event);
+    //  console.log("คลิกแล้วได้อะไร", event);
    
     setValues({ ...values, start: event.startStr, end: endString });
+    
+    
   };
 
   // เป็นการดึงข้อข้อมูลจาก calendar  หากเรามีการเปลี่ยนเดือนถัดไปหรือย้อนกลับ โดยเราจะนำแค่เดือนมาใช้
@@ -340,7 +344,7 @@ const CalendarComponent = () => {
           // console.log(res)\
         )
         .catch((err) => {
-          console.log("รอก่อนสิ", err);
+          // console.log("รอก่อนสิ", err);
         });
       setTimeout(() => {
         setIsModalOpen2(false);
@@ -365,7 +369,7 @@ const CalendarComponent = () => {
     formData.append("files", files);
     handleFileUpdateImg(formData)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log("เกิดอะไรขึ้น", err);
@@ -391,7 +395,7 @@ const CalendarComponent = () => {
       .then((res) => {
         // toast.success('ทำการอัปเดตสำเร็จ')
         swal.fire("แจ้งเตือน", "ทำการอัปเดตข้อมูลสำเร็จ", "success");
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -428,9 +432,7 @@ const CalendarComponent = () => {
     showModal4();
   };
 
-  const onChange = (value, mode) => {
-    console.log(value.format("YYYY-MM-DD"), mode);
-  };
+ 
 
   return (
     <div >
