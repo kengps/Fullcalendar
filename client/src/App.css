@@ -132,16 +132,15 @@ a {
   #external-event ul {
     flex-wrap: wrap;
     justify-content: center;
-    padding:0;
+    padding: 0;
   }
-  
 }
 
 /* Media query for screens with a minimum width of 769px and a maximum width of 992px */
 @media (min-width: 769px) and (max-width: 992px) {
   /* Styles for the Card */
   #external-event ul {
-    padding:0;
+    padding: 0;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -151,7 +150,7 @@ a {
 @media (min-width: 993px) and (max-width: 1200px) {
   /* Styles for the Card */
   #external-event ul {
-    padding:0;
+    padding: 0;
     flex-wrap: wrap;
     justify-content: space-between;
   }
@@ -171,7 +170,7 @@ a {
     /* ตัวอย่าง */
     width: 100%;
     margin-bottom: 20px;
-    padding:0;
+    padding: 0;
   }
 }
 /* 
@@ -191,15 +190,14 @@ a {
 @media only screen and (max-width: 600px) {
   .ms-2 {
     font-size: 8px;
-    padding:0
+    padding: 0;
   }
 }
-
 
 @media only screen and (max-width: 768px) {
   .ms-2 {
     font-size: 12px;
-    padding:0
+    padding: 0;
   }
 }
 
@@ -240,5 +238,12 @@ a {
 
   .ant-col:nth-child(1) {
     order: 2;
+  }
+}
+@media only screen and(max-width: 600px) {
+  .img {
+    width: 100%;
+    height: auto;
+  
   }
 }

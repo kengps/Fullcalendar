@@ -53,7 +53,7 @@ import {
 } from "react-icons/all";
 
 import moment from "moment";
-import momentTimezone from 'moment-timezone'
+import momentTimezone from "moment-timezone";
 const { Meta } = Card;
 
 import {
@@ -217,23 +217,23 @@ const CalendarComponent = () => {
       start: event.dateStr,
       // start: moment(event.date).startOf('day').add(1, 'second').toISOString(),
       // //end: moment(event.dateStr).add(1, "days").format("YYYY-MM-DD"),
-       end: moment(event.dateStr).endOf("day").format("YYYY-MM-DD"),
-    //   start: moment(event.dateStr)
-    //   .startOf("day")
-    //   .add(1, "second")
-    //   .tz("Asia/Bangkok")
-    //   .format(),
-    // end: moment(event.dateStr)
-    //   .startOf("day")
-    //   .add(1, "day")
-    //   .subtract(1, "second")
-    //   .tz("Asia/Bangkok")
-    //   .format(),
+      end: moment(event.dateStr).endOf("day").format("YYYY-MM-DD"),
+      //   start: moment(event.dateStr)
+      //   .startOf("day")
+      //   .add(1, "second")
+      //   .tz("Asia/Bangkok")
+      //   .format(),
+      // end: moment(event.dateStr)
+      //   .startOf("day")
+      //   .add(1, "day")
+      //   .subtract(1, "second")
+      //   .tz("Asia/Bangkok")
+      //   .format(),
     };
     // console.log("มันเป็นยังไง", value);
     createEvent(value)
       .then((res) => {
-        swal.fire('แจ้งเตือน' ,'ทำการเพิ่มข้อมูลเรียบร้อยแล้ว','success')
+        swal.fire("แจ้งเตือน", "ทำการเพิ่มข้อมูลเรียบร้อยแล้ว", "success");
         console.log(res);
       })
       .catch((err) => console.log(err));
@@ -258,7 +258,7 @@ const CalendarComponent = () => {
         setValues("");
         //หรือ
         // setValues({ ...values, title: "" });
-        swal.fire('แจ้งเตือน' ,'ทำการเพิ่มข้อมูลเรียบร้อยแล้ว','success')
+        swal.fire("แจ้งเตือน", "ทำการเพิ่มข้อมูลเรียบร้อยแล้ว", "success");
       })
       .catch((err) => console.log(err));
     setIsModalOpen(false);
@@ -271,20 +271,18 @@ const CalendarComponent = () => {
   //  moment(event.dateStr).add(+1, "days1").format("YYYY-MM-DD"),
   const handleSelect = (event) => {
     // const newEnd = new Date(event.endStr); // สร้างวันที่ใหม่จาก event.endStr
-    // newEnd.setDate(newEnd.getDate()); 
+    // newEnd.setDate(newEnd.getDate());
     // const endString = newEnd.toISOString().slice(0, 10); // แปลงเป็น string รูปแบบ 'yyyy-mm-dd'
     const newEnd = new Date(event.endStr);
     newEnd.setDate(newEnd.getDate()); // ลบ 1 วันจาก newEnd
     const endString = newEnd.toISOString().slice(0, 10);
-  // const startString = moment(event.start).toISOString().slice(0, 10); // แปลงวันที่เริ่มต้นเป็น string
-  //const endString = moment(event.end).toISOString().slice(0, 10); // แปลงวันที่สิ้นสุดเป็น string
+    // const startString = moment(event.start).toISOString().slice(0, 10); // แปลงวันที่เริ่มต้นเป็น string
+    //const endString = moment(event.end).toISOString().slice(0, 10); // แปลงวันที่สิ้นสุดเป็น string
 
     showModal();
     //  console.log("คลิกแล้วได้อะไร", event);
-   
+
     setValues({ ...values, start: event.startStr, end: endString });
-    
-    
   };
 
   // เป็นการดึงข้อข้อมูลจาก calendar  หากเรามีการเปลี่ยนเดือนถัดไปหรือย้อนกลับ โดยเราจะนำแค่เดือนมาใช้
@@ -432,17 +430,14 @@ const CalendarComponent = () => {
     showModal4();
   };
 
- 
-
   return (
-    <div >
+    <div>
       <Row gutter={[16, 16]}>
-        <Col  span={24} md={{ span: 5 }} >
+        <Col span={24} md={{ span: 5 }}>
           {/* <SideMenu /> */}
           <Typography.Title
-            
             className="text-center fontMitr"
-            style={{ fontFamily: "mitr" ,fontSize: '18px' }}
+            style={{ fontFamily: "mitr", fontSize: "18px" }}
           >
             ประเภทการหยุด
           </Typography.Title>
@@ -503,10 +498,16 @@ const CalendarComponent = () => {
             </div>
           </Card>
           <Card>
-            <Typography.Title className="fontMitr text-center" style={{fontSize: '18px'}}>
+            <Typography.Title
+              className="fontMitr text-center"
+              style={{ fontSize: "18px" }}
+            >
               กิจกรรมทั้งหมด
             </Typography.Title>
-            <ol style={{ fontFamily: "mitr", fontWeight: "normal" }} className="ms-2">
+            <ol
+              style={{ fontFamily: "mitr", fontWeight: "normal" }}
+              className="ms-2"
+            >
               {currentEvent.map((item, index) => (
                 <li key={index}>
                   {d === moment(item.start).format("DD/MM/YYYY") ? (
@@ -514,21 +515,27 @@ const CalendarComponent = () => {
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="red" className="ms-2">วันนี้</Tag>{" "}
+                      <Tag color="red" className="ms-2">
+                        วันนี้
+                      </Tag>{" "}
                     </>
                   ) : r >= moment(item.start) && r < moment(item.end) ? (
                     <>
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="yellow"  className="ms-2">อยู่ระหว่างดำเนินการ</Tag>{" "}
+                      <Tag color="yellow" className="ms-2">
+                        อยู่ระหว่างดำเนินการ
+                      </Tag>{" "}
                     </>
                   ) : r < moment(item.start) ? (
                     <>
                       {moment(item.start).format("DD/MM/YYYY") +
                         "-" +
                         item.title}{" "}
-                      <Tag color="green"  className="ms-2">เร็วๆ นี้</Tag>{" "}
+                      <Tag color="green" className="ms-2">
+                        เร็วๆ นี้
+                      </Tag>{" "}
                     </>
                   ) : (
                     <>
@@ -552,9 +559,8 @@ const CalendarComponent = () => {
 
           <Card>
             <Typography.Title
-             
               className="text-center"
-              style={{ fontFamily: "mitr",fontSize: '18px' }}
+              style={{ fontFamily: "mitr", fontSize: "18px" }}
             >
               {" "}
               รายงานสรุป
@@ -580,7 +586,7 @@ const CalendarComponent = () => {
             </Button>
           </Card>
         </Col>
-        <Col  span={24} md={{ span: 18 }}  order={1}>
+        <Col span={24} md={{ span: 18 }} order={1}>
           <Typography.Title
             level={1}
             className="text-center "
@@ -606,7 +612,6 @@ const CalendarComponent = () => {
             locales={thLocale} //กำหนดให้ FullCalendar ใช้ภาษาไทย
             locale="th" //กำหนดให้ภาษาไทยเป็นภาษาหลัก
             selectLongPressDelay={1}
-            
           />
           <Modal
             title="รายละเอียด"
@@ -667,8 +672,13 @@ const CalendarComponent = () => {
             ]}
           >
             <Typography.Title level={2}>รายละเอียด</Typography.Title>
-            <Card style={{ width: 360, objectFit: "contain" }} className="ms-5">
+            <Card
+              // style={{ width: 360, objectFit: "contain" }}
+              className="ms-5 img"
+            >
               <Image
+                // style={{ maxWidth: "100%", height: '25%' }}
+              
                 alt=""
                 src={`${import.meta.env.VITE_REACT_APP_IMAGE}/${image}`}
               />{" "}
