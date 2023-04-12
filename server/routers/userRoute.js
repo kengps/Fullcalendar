@@ -10,7 +10,7 @@ const {
   notifyEvening,
   updateEvent,
   removeEvent,
-  currentNoti
+ 
 } = require("../controllers/calendarController");
 const router = express.Router();
 

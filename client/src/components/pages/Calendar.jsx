@@ -590,7 +590,7 @@ const CalendarComponent = () => {
           <Typography.Title
             level={1}
             className="text-center "
-            style={{ fontFamily: "mitr" }}
+            style={{ fontFamily: "mitr" , textShadow: '2px 0px 6px blue, 0px 2px 8px red' ,color:'white'  }}
           >
             ปฏิทินคนสวย
           </Typography.Title>
