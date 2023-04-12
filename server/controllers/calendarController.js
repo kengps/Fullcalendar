@@ -169,6 +169,7 @@ exports.updateImage = async (req, res) => {
 //   }
 // };
 //update หากมีการเปลี่ยนแปลง Event
+
 exports.updateEvent = async (req, res) => {
   const { id, start, end } = req.body;
   console.log(req.body);
@@ -213,7 +214,7 @@ cron.schedule("15 7 * * *", () => {
 //   notifyEvening();
 // });
 
-// exports.currentNoti = async (req, res) => {
+// const currentNoti = async (req, res) => {
 //   try {
 //     const day = new Date();
 
@@ -232,7 +233,7 @@ cron.schedule("15 7 * * *", () => {
 //       );
 //     });
 
-//     //loop notify
+// //     //loop notify
 //     let msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
 //     for (t in currents) {
 //       const event = currents[t];
@@ -248,7 +249,7 @@ cron.schedule("15 7 * * *", () => {
 //       msg += `- ${title} \n`;
 //     }
 
-//     //notifyEvent(msg);
+//     notifyEvent(msg);
 //     console.log(msg);
 
 
@@ -258,3 +259,7 @@ cron.schedule("15 7 * * *", () => {
 //     console.log(error);
 //   }
 // };
+//ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
+// cron.schedule('* * * * *', ()  => {
+//     currentNoti();
+// });
