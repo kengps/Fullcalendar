@@ -206,9 +206,14 @@ exports.removeEvent = async (req, res) => {
 };
 
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
-cron.schedule("15 7 * * *", () => {
+cron.schedule("45 10 * * *", () => {
   currentDate();
-});
+}, {
+   scheduled: true,
+   timezone: "Asia/Bangkok"
+ }
+
+);
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
 // cron.schedule("* 11 * * *", () => {
 //   notifyEvening();
