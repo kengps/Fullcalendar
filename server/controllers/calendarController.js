@@ -80,12 +80,20 @@ const currentDate = async () => {
   try {
     const day = new Date();
 
-    const currentDate = day.toLocaleDateString({
-      weekday: "long",
-      year: "2-digit",
-      month: "2-digit",
-      day: "2-digit",
-    });
+    // const currentDate = day.toLocaleDateString({
+    //   weekday: "long",
+    //   year: "2-digit",
+    //   month: "2-digit",
+    //   day: "2-digit",
+    // });
+
+    const currentDate = day
+      .toLocaleDateString("th-TH", {
+        dateStyle: "short",
+      })
+      .replace(/\//g, "/")
+      .replace(/\b(\d)\b/g, "0$1");
+
     const currentD = await Event.find().sort({ start: 1 });
     const currents = currentD.filter((item) => {
       return (
@@ -113,7 +121,6 @@ const currentDate = async () => {
 
     notifyEvent(msg);
     console.log(msg);
-
 
     // console.log(currents);
     //res.send(currents);
@@ -206,13 +213,15 @@ exports.removeEvent = async (req, res) => {
 };
 
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
-cron.schedule("0 7 * * *", () => {
-  currentDate();
-}, {
-   scheduled: true,
-   timezone: "Asia/Bangkok"
- }
-
+cron.schedule(
+  "10 11 * * *",
+  () => {
+    currentDate();
+  },
+  {
+    scheduled: true,
+    timezone: "Asia/Bangkok",
+  }
 );
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
 // cron.schedule("* 11 * * *", () => {
@@ -256,7 +265,6 @@ cron.schedule("0 7 * * *", () => {
 
 //     notifyEvent(msg);
 //     console.log(msg);
-
 
 //     // console.log(currents);
 //     res.send(currents);
