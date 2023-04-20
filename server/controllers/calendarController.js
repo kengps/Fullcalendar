@@ -76,16 +76,62 @@ exports.currentMonth = async (req, res) => {
 //   }
 // }
 
+// const currentDate = async () => {
+//   try {
+//     const day = new Date();
+
+//     // const currentDate = day.toLocaleDateString({
+//     //   weekday: "long",
+//     //   year: "2-digit",
+//     //   month: "2-digit",
+//     //   day: "2-digit",
+//     // });
+
+//     const currentDate = day
+//       .toLocaleDateString("th-TH", {
+//         dateStyle: "short",
+//       })
+//       .replace(/\//g, "/")
+//       .replace(/\b(\d)\b/g, "0$1");
+
+//     const currentD = await Event.find().sort({ start: 1 });
+//     const currents = currentD.filter((item) => {
+//       return (
+//         isSameDay(day, item.start) ||
+//         isSameDay(day, item.end) ||
+//         (day >= item.start && day < item.end)
+//       );
+//     });
+
+//     //loop notify
+//     let msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
+//     for (t in currents) {
+//       const event = currents[t];
+
+//       let title = event.title;
+//       if (isSameDay(day, event.start)) {
+//         title += " (วันนี้)";
+//       }
+//       if (day >= event.start && day < event.end) {
+//         title += " (อยู่ระหว่างดำเนินการ)";
+//       }
+
+//       msg += `- ${title} \n`;
+//     }
+
+//     notifyEvent(msg);
+//     console.log(msg);
+
+//     // console.log(currents);
+//     //res.send(currents);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 const currentDate = async () => {
   try {
     const day = new Date();
-
-    // const currentDate = day.toLocaleDateString({
-    //   weekday: "long",
-    //   year: "2-digit",
-    //   month: "2-digit",
-    //   day: "2-digit",
-    // });
 
     const currentDate = day
       .toLocaleDateString("th-TH", {
@@ -103,27 +149,28 @@ const currentDate = async () => {
       );
     });
 
-    //loop notify
-    let msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
-    for (t in currents) {
-      const event = currents[t];
+    let msg = "";
+    if (currents.length === 0) {
+      msg = "วันนี้ไม่มีกิจกรรม";
+    } else {
+      msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
+      for (t in currents) {
+        const event = currents[t];
 
-      let title = event.title;
-      if (isSameDay(day, event.start)) {
-        title += " (วันนี้)";
-      }
-      if (day >= event.start && day < event.end) {
-        title += " (อยู่ระหว่างดำเนินการ)";
-      }
+        let title = event.title;
+        if (isSameDay(day, event.start)) {
+          title += " (วันนี้)";
+        }
+        if (day >= event.start && day < event.end) {
+          title += " (อยู่ระหว่างดำเนินการ)";
+        }
 
-      msg += `- ${title} \n`;
+        msg += `- ${title} \n`;
+      }
     }
 
     notifyEvent(msg);
     console.log(msg);
-
-    // console.log(currents);
-    //res.send(currents);
   } catch (error) {
     console.log(error);
   }
@@ -214,7 +261,7 @@ exports.removeEvent = async (req, res) => {
 
 //ให้ run function  .... ตลอด โดยตรง * แต่ละตำแหน่งจะหมายถึง  second (optional) minute hour day of month month ay of week
 cron.schedule(
-  "0 7 * * *",
+  "* * * * *",
   () => {
     currentDate();
   },

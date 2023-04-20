@@ -25,6 +25,7 @@ import {
   Divider,
   Space,
   Table,
+  Spin 
 } from "antd";
 import SideMenu from "../layouts/SideMenu";
 import { useState, useEffect } from "react";
@@ -72,6 +73,7 @@ const CalendarComponent = () => {
   const [isModalOpen4, setIsModalOpen4] = useState(false);
   const [id, setId] = useState("");
   const [files, setFiles] = useState("");
+  const [loading, setLoading] = useState(false)
 
   //state ของการเก็บค่ารูปภาพ
   const [image, setImage] = useState("");
@@ -115,31 +117,51 @@ const CalendarComponent = () => {
   // });
 
   const leaveSickCount = eventsOfYearMonth.filter(
-    (event) => event.color === "#FF3366 "
+    (event) => event.color === "#9292D1 "
   ).length;
   const leavePersonalCount = eventsOfYearMonth.filter(
-    (event) => event.color === "#99CC33"
+    (event) => event.color === "#B6BBC7"
   ).length;
   const travelPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.color === "#00BFFF"
+    (event) => event.color === "#D6C3CE"
   ).length;
   const travelGoPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.color === "#FF66CC"
+    (event) => event.color === "#ECD4D4"
   ).length;
   const seminarPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.color === "#f7d342"
+    (event) => event.color === "#F5EED8"
   ).length;
   const otherPersonalCount = eventsOfYearMonth.filter(
-    (event) => event.color === "#BDB76B"
+    (event) => event.color === "#F5E3CB"
+  ).length;
+  const otherPersonalCount2 = eventsOfYearMonth.filter(
+    (event) => event.color === "#9BC2B2"
+  ).length;
+  const otherPersonalCount3 = eventsOfYearMonth.filter(
+    (event) => event.color === "#C5D6BA"
+  ).length;
+  const otherPersonalCount4 = eventsOfYearMonth.filter(
+    (event) => event.color === "#F2E9D3"
+  ).length;
+  const otherPersonalCount5 = eventsOfYearMonth.filter(
+    (event) => event.color === "#F6C8B6"
+  ).length;
+  const otherPersonalCount6 = eventsOfYearMonth.filter(
+    (event) => event.color === "#CA9CAC"
   ).length;
 
   const summary = [
-    { type: "ลาป่วย", count: leaveSickCount },
-    { type: "ลากิจ", count: leavePersonalCount },
-    { type: "ลาพักร้อน", count: travelPersonalCount },
-    { type: "ไปเที่ยว", count: travelGoPersonalCount },
-    { type: "สัมมนาต่างจังหวัด", count: seminarPersonalCount },
-    { type: "อื่นๆ", count: otherPersonalCount },
+    { type: "สีม่วง", count: leaveSickCount },
+    { type: "สีเทา", count: leavePersonalCount },
+    { type: "สีชมพูม่วง", count: travelPersonalCount },
+    { type: "สีชมพูอ่อน", count: travelGoPersonalCount },
+    { type: "สีเหลือง", count: seminarPersonalCount },
+    { type: "สีเบจ", count: otherPersonalCount },
+    { type: "สีเขียวเข้ม", count: otherPersonalCount2 },
+    { type: "สีเขียวอ่อน", count: otherPersonalCount3 },
+    { type: "สีเบจเข้ม", count: otherPersonalCount4 },
+    { type: "สีส้ม", count: otherPersonalCount5 },
+    { type: "สีเปลือกมังคุดอ่อน", count: otherPersonalCount6 },
   ];
 
   // const summaryByYear = {
@@ -172,6 +194,7 @@ const CalendarComponent = () => {
       .then((res) => {
         // console.log('ได้อะไร', res.data);
         setEvent(res.data);
+      
       })
       .catch((err) => {
         console.log(err);
@@ -179,12 +202,17 @@ const CalendarComponent = () => {
   };
   // เพิ่มประชุม และเปลี่ยนออกงานนอกสถานที่ เป็นสัมนา
   const activity = [
-    { id: "1", name: "ลาป่วย", color: "#FF3366" },
-    { id: "2", name: "ลากิจ", color: "#99CC33" },
-    { id: "3", name: "ลาพักร้อน", color: "#00BFFF" },
-    { id: "4", name: "ไปเที่ยว", color: "#FF66CC" },
-    { id: "5", name: "สัมมนาต่างจังหวัด", color: "#f7d342" },
-    { id: "6", name: "อื่นๆ", color: "#BDB76B" },
+    { id: "1", name: "สีม่วง", color: "#9292D1" },
+    { id: "2", name: "สีเทา", color: "#B6BBC7" },
+    { id: "3", name: "สีชมพูม่วง", color: "#D6C3CE" },
+    { id: "4", name: "สีชมพูอ่อน", color: "#ECD4D4" },
+    { id: "5", name: "สีเหลือง", color: "#F5EED8" },
+    { id: "6", name: "สีเบจ", color: "#F5E3CB" },
+    { id: "7", name: "สีเขียวเข้ม", color: "#9BC2B2" },
+    { id: "8", name: "สีเขียวอ่อน", color: "#C5D6BA" },
+    { id: "9", name: "สีเบจเข้ม", color: "#F2E9D3" },
+    { id: "10", name: "สีส้ม", color: "#F6C8B6" },
+    { id: "11", name: "สีเปลือกมังคุดอ่อน", color: "#CA9CAC" },
   ];
 
   // function DragGable เป็นการดึงค่าจาก id external-event มาทั้งหมด เพื้่อให้สามารถดึงข้อมูลทีละตัวได้ เพราะตอนแรกจะไม่สามารถดึงข้อมูลได้มันจะเป็นการคลุมดำ
@@ -234,6 +262,11 @@ const CalendarComponent = () => {
     createEvent(value)
       .then((res) => {
         swal.fire("แจ้งเตือน", "ทำการเพิ่มข้อมูลเรียบร้อยแล้ว", "success");
+        
+        setTimeout(() => {
+          // location.reload();
+        },2000)
+
         console.log(res);
       })
       .catch((err) => console.log(err));
@@ -259,6 +292,10 @@ const CalendarComponent = () => {
         //หรือ
         // setValues({ ...values, title: "" });
         swal.fire("แจ้งเตือน", "ทำการเพิ่มข้อมูลเรียบร้อยแล้ว", "success");
+        setTimeout(() => {
+          // location.reload();
+        },2000)
+
       })
       .catch((err) => console.log(err));
     setIsModalOpen(false);
@@ -338,6 +375,10 @@ const CalendarComponent = () => {
           (res) => {
             swal.fire("แจ้งเตือน", res.data, "success");
             loadData();
+            setTimeout(() => {
+              // location.reload();
+            },2000)
+    
           }
           // console.log(res)\
         )
@@ -394,6 +435,9 @@ const CalendarComponent = () => {
         // toast.success('ทำการอัปเดตสำเร็จ')
         swal.fire("แจ้งเตือน", "ทำการอัปเดตข้อมูลสำเร็จ", "success");
         // console.log(res);
+        setTimeout(() => {
+          location.reload();
+        },2000)
       })
       .catch((err) => {
         console.log(err);
@@ -439,7 +483,7 @@ const CalendarComponent = () => {
             className="text-center fontMitr"
             style={{ fontFamily: "mitr", fontSize: "18px" }}
           >
-            ประเภทการหยุด
+            แถบสี
           </Typography.Title>
           <Card style={{ marginTop: "20px" }}>
             <div id="external-event">
@@ -459,8 +503,8 @@ const CalendarComponent = () => {
                       marginRight: "20px",
                     }}
                   >
-                    {/* {item.name} */}
-                    {item.name === "ลาป่วย" ? (
+                    {item.name}
+                    {/* {item.name === "ลาป่วย" ? (
                       <>
                         {" "}
                         <BsThermometerHigh /> {item.name}
@@ -491,7 +535,7 @@ const CalendarComponent = () => {
                       </>
                     ) : (
                       <>{item.name}</>
-                    )}
+                    )} */}
                   </li>
                 ))}
               </ul>
@@ -628,7 +672,7 @@ const CalendarComponent = () => {
             />
             <select name="color" onChange={onChangeValue}>
               <option key={9999} value="">
-                --กรุณาระบุประเภท--
+                --กรุณาเลือกแถบสี--
               </option>
               {activity.map((item, index) => (
                 <option
@@ -804,29 +848,49 @@ const CalendarComponent = () => {
                 {years.map((year, index) => (
                   <React.Fragment key={index}>
                     <tr>
-                      <th rowSpan="6">{year}</th>
-                      <td scope="row">ลาป่วย</td>
-                      <td>{getLeaveCount(year, "ลาป่วย")}</td>
+                      <th rowSpan="11">{year}</th>
+                      <td scope="row">สีม่วง</td>
+                      <td>{getLeaveCount(year, "สีม่วง")}</td>
                     </tr>
                     <tr>
-                      <td scope="row">ลากิจ</td>
-                      <td>{getLeaveCount(year, "ลากิจ")}</td>
+                      <td scope="row">สีเทา</td>
+                      <td>{getLeaveCount(year, "สีเทา")}</td>
                     </tr>
                     <tr>
-                      <td scope="row">ลาพักร้อน</td>
-                      <td>{getLeaveCount(year, "ลาพักร้อน")}</td>
+                      <td scope="row">สีชมพูม่วง</td>
+                      <td>{getLeaveCount(year, "สีชมพูม่วง")}</td>
                     </tr>
                     <tr>
-                      <td scope="row">ไปเที่ยว</td>
-                      <td>{getLeaveCount(year, "ไปเที่ยว")}</td>
+                      <td scope="row">สีชมพูอ่อน</td>
+                      <td>{getLeaveCount(year, "สีชมพูอ่อน")}</td>
                     </tr>
                     <tr>
-                      <td scope="row">สัมมนาต่างจังหวัด</td>
-                      <td>{getLeaveCount(year, "สัมมนาต่างจังหวัด")}</td>
+                      <td scope="row">สีเหลือง</td>
+                      <td>{getLeaveCount(year, "สีเหลือง")}</td>
                     </tr>
                     <tr>
-                      <td scope="row">อื่นๆ</td>
-                      <td>{getLeaveCount(year, "อื่นๆ")}</td>
+                      <td scope="row">สีเบจ</td>
+                      <td>{getLeaveCount(year, "สีเบจ")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">สีเขียวเข้ม</td>
+                      <td>{getLeaveCount(year, "สีเขียวเข้ม")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">สีเขียวอ่อน</td>
+                      <td>{getLeaveCount(year, "สีเขียวอ่อน")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">สีเบจเข้ม</td>
+                      <td>{getLeaveCount(year, "สีเบจเข้ม")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">สีส้ม</td>
+                      <td>{getLeaveCount(year, "สีส้ม")}</td>
+                    </tr>
+                    <tr>
+                      <td scope="row">สีเปลือกมังคุดอ่อน</td>
+                      <td>{getLeaveCount(year, "สีเปลือกมังคุดอ่อน")}</td>
                     </tr>
                   </React.Fragment>
                 ))}
