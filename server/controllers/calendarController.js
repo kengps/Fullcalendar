@@ -150,9 +150,29 @@ const currentDate = async () => {
     });
 
     let msg = "";
-    if (currents.length === 0) {
-      msg = `${currentDate}_ไม่มีกิจกรรมที่ต้องทำในวันนี้`;
-    } else {
+     // เช็ควันที่ไม่มีกิจกรรม ให้แจ้งเตือนเข้าไปที่ไลน์์
+    // if (currents.length === 0) {
+    //   msg = `${currentDate}_ไม่มีกิจกรรมที่ต้องทำในวันนี้`;
+    // } else {
+    //   msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
+    //   for (t in currents) {
+    //     const event = currents[t];
+
+    //     let title = event.title;
+    //     if (isSameDay(day, event.start)) {
+    //       title += " (วันนี้)";
+    //     }
+    //     if (day >= event.start && day < event.end) {
+    //       title += " (อยู่ระหว่างดำเนินการ)";
+    //     }
+
+    //     msg += `- ${title} \n`;
+    //   }
+    // }  
+    
+
+    //* หากไม่มีกิจกรรม
+    if (currents.length > 0) {
       msg = `${currentDate}_วันนี้มีกิจกรรม 📢 : \n`;
       for (t in currents) {
         const event = currents[t];
@@ -168,6 +188,7 @@ const currentDate = async () => {
         msg += `- ${title} \n`;
       }
     }
+
 
     notifyEvent(msg);
     console.log(msg);
